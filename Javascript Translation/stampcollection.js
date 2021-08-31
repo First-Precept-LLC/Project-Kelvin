@@ -174,3 +174,9 @@ class StampsModule {
     } 
 
 }
+
+let testStamp = new StampsModule();
+
+testStamp.update_vote("goldstamp", "alice_near_id", "bob_near_id");
+
+testStamp.print_all_scores();
