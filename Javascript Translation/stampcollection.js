@@ -1,6 +1,10 @@
 
 import Utilities from "./utilities";
 const {Matrix, solve} = require('ml-matrix'); //npm install this
+const readline = require('readline');
+const f = require('fs');
+
+const admin_usernames = []; //Either fill with admins, or remove
 
 class StampsModule {
     toString() {
@@ -94,6 +98,79 @@ class StampsModule {
         this.utils.scores = solve(users_matrix, user_count_matrix);
 
         this.print_all_scores();
-
+        //done
     }
+
+    get_user_scores() {
+        const message = "Here are the users and how many stamps they're worth:\n";
+        this.utils.users = this.utils.get_users();
+        for (let i = 0; i < this.utils.users.length; i++) {
+            let user_id = this.utils.users[i];
+            let name = "<@" + String(user_id) + ">"; //Format as necessary
+            let stamps = this.get_user_stamps(user_id);
+            message += name + ": \t" + String(stamps) + "\n";
+        }
+        return message;
+    }
+
+    print_all_scores() {
+        let total_stamps = 0;
+        this.utils.users = this.utils.get_users();
+        for (let i = 0; i < this.utils.users.length; i++) {
+            let user_id = this.utils.users[i];
+            let name = "<@" + String(user_id) + ">"; //Format as necessary
+            let stamps = this.get_user_stamps(user_id);
+            total_stamps += stamps;
+            console.log(name + "\t" + String(stamps));
+        }
+        console.log("Total votes:" + String(this.total_votes));
+        console.log("Total stamps:" + String(stamps));
+    }
+
+    get_user_stamps(user) {
+        let index = this.utils.index_dammit(user);
+        console.log("get_user_stamps for " + String(user)+ ", index=" + String(index));
+        let stamps = 0.0;
+        if (index) {
+            stamps = this.utils.scores[index] * this.total_votes;
+            console.log(stamps);
+            console.log(this.utils.scores[index]);
+            console.log(this.total_votes);
+        }
+        return stamps;
+    }
+
+    load_votes_from_csv(filename="stamps.csv") {
+        let rl = readLine.createInterface({
+            input : f.createReadStream(file),
+            output : process.stdout,
+            terminal: false
+        });
+        let headerSkipped = false;
+        rl.on('line', function (line) {
+            if (! headerSkipped) {
+                headerSkipped = true;
+            } else {
+                let line_contents = line.split(",");
+                let msg_id =line_contents[0];
+                let react_type = line_contents[1];
+                let from_id = line_contents[2];
+                let to_id = line_contents[3];
+                this.update_vote(react_type, from_id, to_id, false, false);
+            }
+        });
+        this.calculate_stamps();
+    }
+
+
+
+    static user_is_admin(username) {
+        for(let i = 0; i < admin_usernames.length; i++) {
+            if (username == admin_usernames[i]) {
+                return true;
+            }
+            return false;
+        }
+    } 
+
 }
