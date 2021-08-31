@@ -1,4 +1,27 @@
-const database_path = "Placeholder; replace with real db path";
+const {Sequelize, DataTypes} = require("sequelize");
+
+
+const database_path = "sqlite::memory"; //replace with whatever database gets used in final result
+
+const sequelize = new Sequelize(database_path);
+
+const UserVotes = sequelize.define('uservotes', {
+    user: { //This field, as well as voted_for, should both be Near Wallet IDs.
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    votedFor: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    votecount: {
+        type: DataTypes.FLOAT,
+        allowNull: false
+    }
+},
+{ freezeTableName: true });
+
+
 
 export default class Utilities {
 
@@ -37,15 +60,14 @@ export default class Utilities {
             Utilities.__instance = this;
             this.start_time = Date.now();
             this.DB_PATH = database_path;
-            this.db = new database_path(database_path); //TODO: implement the database; modify queries to it accordingly.
+            this.db = new Sequelize(database_path); //TODO: implement the database; modify queries to it accordingly.
         }
 
     }
 
     clearVotes() {
-        const query = "DELETE FROM uservotes"
-        this.db.query(query)
-        this.db.commit() //may differ depending on db implementation
+        const query = "DELETE FROM uservotes";
+        this.db.query(query);
     }
 
     update_ids_list() {
@@ -85,23 +107,18 @@ export default class Utilities {
     }
     //A series of databse functions follow. Modify based on db implementation.
     update_vote(user, voted_for, vote_quantity) {
-        query = (
-            ("INSERT OR REPLACE INTO uservotes VALUES ({0},{1},IFNULL((SELECT votecount " +
-            "FROM uservotes WHERE user = {0} AND votedFor = {1}),0)+{2})").format(
-                user, voted_for, vote_quantity
-            )
-        ); 
+        query = (`INSERT OR REPLACE INTO uservotes VALUES (${user},${voted_for},IFNULL((SELECT votecount ` +
+            `FROM uservotes WHERE user = ${user} AND votedFor = ${voted_for}),0)+${vote_quantity})`); 
         this.db.query(query);
-        this.db.commit();
     }
 
     get_votes_by_user(user){
-        const query = "SELECT IFNULL(sum(votecount),0) FROM uservotes where user = {0}".format(user);
+        const query = `SELECT IFNULL(sum(votecount),0) FROM uservotes where user = ${user}`;
         return this.db.query(query)[0][0];
     }
 
     get_votes_for_user(user){
-        const query = "SELECT IFNULL(sum(votecount),0) FROM uservotes where votedFor = {0}".format(user);
+        const query = `SELECT IFNULL(sum(votecount),0) FROM uservotes where votedFor = ${user}`;
         return this.db.query(query)[0][0];
     }
 
@@ -111,12 +128,12 @@ export default class Utilities {
     }
 
     get_all_user_votes(){
-        return this.db.get("uservotes", "user,votedFor,votecount");
+        return UserVotes.findAll();
     }
 
     get_users() {
         const query = "SELECT user from (SELECT user FROM uservotes UNION SELECT votedFor as user FROM uservotes)";
-        const result = this.db.query(query);
+        const [result, metadata] = this.db.query(query);
         let users = [];
         for (let i = 0; i < result.length; i++) {
             let sublist = reult[i];
@@ -127,9 +144,5 @@ export default class Utilities {
         }
         return users;
     }
-
-
-
-
 
 }
