@@ -1,6 +1,6 @@
 
 import Utilities from "./utilities";
-const {Matrix} = require('ml-matrix'); //npm install this
+const {Matrix, solve} = require('ml-matrix'); //npm install this
 
 class StampsModule {
     toString() {
@@ -77,9 +77,23 @@ class StampsModule {
             let total_votes_by_user = this.utils.get_votes_by_user(from_id);
             if (total_votes_by_user != 0) {
                 score = (this.user_karma * votes_for_user) / total_votes_by_user;
-                 
+                users_matrix.set(toi, from_id_index, score); 
             }
+
         }
+
+        for (let i = 1; i < user_count; i++) {
+            users_matrix.set(i, i, -1.0);
+        }
+
+        users_matrix.set(0, 0, 1.0);
+
+        user_count_matrix = Matrix.zeros(user_count, 1);
+        user_count_matrix.set(0, 0, 1.0); //God has 1 karma
+
+        this.utils.scores = solve(users_matrix, user_count_matrix);
+
+        this.print_all_scores();
 
     }
 }
