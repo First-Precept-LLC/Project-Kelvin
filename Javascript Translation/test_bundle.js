@@ -7,7 +7,7 @@ const stampy_id = "stampy";
 const database_path = "sqlite::memory"; //replace with whatever database gets used in final result
 
 let db = new Sequelize(database_path); //TODO: implement the database; modify queries to it accordingly.
-db.query("CREATE TABLE IF NOT EXISTS uservotes (user VARCHAR(64), votedFor VARCHAR(64), votecount FLOAT)")
+db.query("CREATE TABLE IF NOT EXISTS uservotes (user VARCHAR(64), votedFor VARCHAR(64), votecount FLOAT)");
 let UserVotes = db.define('uservotes', {
     user: { //This field, as well as voted_for, should both be Near Wallet IDs.
         type: DataTypes.STRING,
@@ -73,7 +73,6 @@ class Utilities {
             this.start_time = Date.now();
             this.DB_PATH = database_path;
             this.db = new Sequelize(database_path); //TODO: implement the database; modify queries to it accordingly.
-            this.db.query("CREATE TABLE IF NOT EXISTS uservotes (user VARCHAR(64), votedFor VARCHAR(64), votecount FLOAT)");
             this.UserVotes = this.db.define('uservotes', {
                 user: { //This field, as well as voted_for, should both be Near Wallet IDs.
                     type: DataTypes.STRING,
@@ -89,9 +88,13 @@ class Utilities {
                 }
             },
             { freezeTableName: true });
-            this.UserVotes.create({user: "alice", votedFor: "bob", votecount: 7});
         }
 
+    }
+
+    async init() {
+        await this.db.query("CREATE TABLE IF NOT EXISTS uservotes (user VARCHAR(64), votedFor VARCHAR(64), votecount FLOAT, id VARCHAR(64), createdAt BIGINT, updatedAt BIGINT)");
+        await this.UserVotes.create({user: "alice", votedFor: "bob", votecount: 7});
     }
 
     clearVotes() {
@@ -103,8 +106,8 @@ class Utilities {
         this.ids = this.users.sort();;
         this.index = {0: 0};
         for(let i = 0; i < this.ids.length; i++) {
-            userid = this.ids[i];
-            this.index[userid] = this.ids.index(userid);
+            let userid = this.ids[i];
+            this.index[userid] = this.ids.indexOf(userid);
         }
     }
 
@@ -143,17 +146,17 @@ class Utilities {
 
     async get_votes_by_user(user){
         const query = `SELECT IFNULL(sum(votecount),0) FROM uservotes where user = ${user}`;
-        return await this.db.query(query)[0][0];
+        return (await this.db.query(query))[0][0]["sum(votecount)"];
     }
 
     async get_votes_for_user(user){
         const query = `SELECT IFNULL(sum(votecount),0) FROM uservotes where votedFor = ${user}`;
-        return await this.db.query(query)[0][0];
+        return (await this.db.query(query))[0][0]["sum(votecount)"];
     }
 
     async get_total_votes(){
         const query = "SELECT sum(votecount) from uservotes where user is not 0";
-        return await this.db.query(query);
+        return (await this.db.query(query))[0][0]["sum(votecount)"];
     }
 
     async get_all_user_votes(){
@@ -162,14 +165,10 @@ class Utilities {
 
     async get_users() {
         const query = "SELECT user from (SELECT user FROM uservotes UNION SELECT votedFor as user FROM uservotes)";
-        const result = await this.db.query(query, {type: QueryTypes.SELECT});
+        const result = (await this.db.query(query, {type: QueryTypes.SELECT}));
         let users = [];
         for (let i = 0; i < result.length; i++) {
-            let sublist = reult[i];
-            for(let j = 0; j < result.length; j++) {
-                let item = sublist[j];
-                users.push(item);
-            }
+            users.push(result[i]["user"]);
         }
         return users;
     }
@@ -186,8 +185,12 @@ class StampsModule {
         this.red_stamp_value = 1;
         this.gold_stamp_value = this.red_stamp_value * 5;
         this.user_karma = 1.0;
-        this.total_votes = this.utils.get_total_votes();
-        this.calculate_stamps();
+    }
+
+    async init() {
+        await this.utils.init()
+        this.total_votes = await this.utils.get_total_votes();
+        await this.calculate_stamps(); 
     }
 
     reset_stamps() {
@@ -248,7 +251,7 @@ class StampsModule {
             let votes_for_user = votes[i][2];
             let from_id_index = this.utils.index[from_id];
             let toi = this.utils.index[to_id];
-            let total_votes_by_user = this.utils.get_votes_by_user(from_id);
+            let total_votes_by_user = await this.utils.get_votes_by_user(from_id);
             if (total_votes_by_user != 0) {
                 score = (this.user_karma * votes_for_user) / total_votes_by_user;
                 users_matrix.set(toi, from_id_index, score); 
@@ -262,10 +265,10 @@ class StampsModule {
 
         users_matrix.set(0, 0, 1.0);
 
-        user_count_matrix = Matrix.zeros(user_count, 1);
+        let user_count_matrix = Matrix.zeros(user_count, 1);
         user_count_matrix.set(0, 0, 1.0); //God has 1 karma
 
-        this.utils.scores = solve(users_matrix, user_count_matrix);
+        this.utils.scores = solve(users_matrix, user_count_matrix).to1DArray();
 
         this.print_all_scores();
         //done
@@ -294,14 +297,14 @@ class StampsModule {
             console.log(name + "\t" + String(stamps));
         }
         console.log("Total votes:" + String(this.total_votes));
-        console.log("Total stamps:" + String(stamps));
+        console.log("Total stamps:" + String(total_stamps));
     }
 
     get_user_stamps(user) {
         let index = this.utils.index_dammit(user);
         console.log("get_user_stamps for " + String(user)+ ", index=" + String(index));
         let stamps = 0.0;
-        if (index) {
+        if (index) { //Might remove depending on if user 0 is stampy or otherwise distinct, which this originally assumed.
             stamps = this.utils.scores[index] * this.total_votes;
             console.log(stamps);
             console.log(this.utils.scores[index]);
@@ -347,6 +350,13 @@ class StampsModule {
 
 let testStamp = new StampsModule();
 
-testStamp.update_vote("goldstamp", "alice_near_id", "bob_near_id");
+let test = async function() {
+    await testStamp.init();
 
-testStamp.print_all_scores();
+    await testStamp.update_vote("goldstamp", "alice_near_id", "bob_near_id");
+
+    await testStamp.print_all_scores();
+}
+
+test();
+

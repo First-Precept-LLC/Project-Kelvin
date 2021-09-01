@@ -17,8 +17,12 @@ class StampsModule {
         this.red_stamp_value = 1;
         this.gold_stamp_value = this.red_stamp_value * 5;
         this.user_karma = 1.0;
-        this.total_votes = this.utils.get_total_votes();
-        this.calculate_stamps();
+    }
+
+    async init() {
+        await this.utils.init()
+        this.total_votes = await this.utils.get_total_votes();
+        await this.calculate_stamps(); 
     }
 
     reset_stamps() {
@@ -50,7 +54,7 @@ class StampsModule {
         }
 
         this.total_votes += vote_strength;
-        this.utils.update_vote(from_id, to_id, vote_strength);
+        await this.utils.update_vote(from_id, to_id, vote_strength);
         this.utils.users = await this.utils.get_users();
         this.utils.update_ids_list();
         if (recalculate) {
@@ -79,7 +83,7 @@ class StampsModule {
             let votes_for_user = votes[i][2];
             let from_id_index = this.utils.index[from_id];
             let toi = this.utils.index[to_id];
-            let total_votes_by_user = this.utils.get_votes_by_user(from_id);
+            let total_votes_by_user = await this.utils.get_votes_by_user(from_id);
             if (total_votes_by_user != 0) {
                 score = (this.user_karma * votes_for_user) / total_votes_by_user;
                 users_matrix.set(toi, from_id_index, score); 
@@ -93,10 +97,10 @@ class StampsModule {
 
         users_matrix.set(0, 0, 1.0);
 
-        user_count_matrix = Matrix.zeros(user_count, 1);
+        let user_count_matrix = Matrix.zeros(user_count, 1);
         user_count_matrix.set(0, 0, 1.0); //God has 1 karma
 
-        this.utils.scores = solve(users_matrix, user_count_matrix);
+        this.utils.scores = solve(users_matrix, user_count_matrix).to1DArray();
 
         this.print_all_scores();
         //done
@@ -125,14 +129,14 @@ class StampsModule {
             console.log(name + "\t" + String(stamps));
         }
         console.log("Total votes:" + String(this.total_votes));
-        console.log("Total stamps:" + String(stamps));
+        console.log("Total stamps:" + String(total_stamps));
     }
 
     get_user_stamps(user) {
         let index = this.utils.index_dammit(user);
         console.log("get_user_stamps for " + String(user)+ ", index=" + String(index));
         let stamps = 0.0;
-        if (index) {
+        if (index) { //Might remove depending on if user 0 is stampy or otherwise distinct, which this originally assumed.
             stamps = this.utils.scores[index] * this.total_votes;
             console.log(stamps);
             console.log(this.utils.scores[index]);
@@ -178,6 +182,12 @@ class StampsModule {
 
 let testStamp = new StampsModule();
 
-testStamp.update_vote("goldstamp", "alice_near_id", "bob_near_id");
+let test = async function() {
+    await testStamp.init();
 
-testStamp.print_all_scores();
+    await testStamp.update_vote("goldstamp", "alice_near_id", "bob_near_id");
+
+    await testStamp.print_all_scores();
+}
+
+test();

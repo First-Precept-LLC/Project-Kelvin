@@ -63,6 +63,11 @@ export default class Utilities {
 
     }
 
+    async init() {
+        await this.db.query("CREATE TABLE IF NOT EXISTS uservotes (user VARCHAR(64), votedFor VARCHAR(64), votecount FLOAT, id VARCHAR(64), createdAt BIGINT, updatedAt BIGINT)");
+        await this.UserVotes.create({user: "alice", votedFor: "bob", votecount: 7});
+    }
+
     clearVotes() {
         const query = "DELETE FROM uservotes";
         this.db.query(query);
@@ -72,8 +77,8 @@ export default class Utilities {
         this.ids = this.users.sort();;
         this.index = {0: 0};
         for(let i = 0; i < this.ids.length; i++) {
-            userid = this.ids[i];
-            this.index[userid] = this.ids.index(userid);
+            let userid = this.ids[i];
+            this.index[userid] = this.ids.indexOf(userid);
         }
     }
 
@@ -104,41 +109,37 @@ export default class Utilities {
         return 0.0;
     }
     //A series of databse functions follow. Modify based on db implementation.
-    update_vote(user, voted_for, vote_quantity) {
+    async update_vote(user, voted_for, vote_quantity) {
         let query = (`INSERT OR REPLACE INTO uservotes VALUES (${user},${voted_for},IFNULL((SELECT votecount ` +
             `FROM uservotes WHERE user = ${user} AND votedFor = ${voted_for}),0)+${vote_quantity})`); 
-        this.db.query(query);
+        await this.db.query(query);
     }
 
-    get_votes_by_user(user){
+    async get_votes_by_user(user){
         const query = `SELECT IFNULL(sum(votecount),0) FROM uservotes where user = ${user}`;
-        return this.db.query(query)[0][0];
+        return (await this.db.query(query))[0][0]["sum(votecount)"];
     }
 
-    get_votes_for_user(user){
+    async get_votes_for_user(user){
         const query = `SELECT IFNULL(sum(votecount),0) FROM uservotes where votedFor = ${user}`;
-        return this.db.query(query)[0][0];
+        return (await this.db.query(query))[0][0]["sum(votecount)"];
     }
 
-    get_total_votes(){
+    async get_total_votes(){
         const query = "SELECT sum(votecount) from uservotes where user is not 0";
-        return this.db.query(query);
+        return (await this.db.query(query))[0][0]["sum(votecount)"];
     }
 
-    get_all_user_votes(){
-        return this.UserVotes.findAll();
+    async get_all_user_votes(){
+        return await this.UserVotes.findAll();
     }
 
     async get_users() {
         const query = "SELECT user from (SELECT user FROM uservotes UNION SELECT votedFor as user FROM uservotes)";
-        const result = await this.db.query(query, {type: QueryTypes.SELECT});
+        const result = (await this.db.query(query, {type: QueryTypes.SELECT}));
         let users = [];
         for (let i = 0; i < result.length; i++) {
-            let sublist = reult[i];
-            for(let j = 0; j < result.length; j++) {
-                let item = sublist[j];
-                users.push(item);
-            }
+            users.push(result[i]["user"]);
         }
         return users;
     }
