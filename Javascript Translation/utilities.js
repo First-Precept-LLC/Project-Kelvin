@@ -1,25 +1,8 @@
-const {Sequelize, DataTypes} = require("sequelize");
+const {Sequelize, DataTypes, QueryTypes} = require("sequelize");
+let sqlite3 = require("sqlite3").verbose();
 
 
 const database_path = "sqlite::memory"; //replace with whatever database gets used in final result
-
-const sequelize = new Sequelize(database_path);
-
-const UserVotes = sequelize.define('uservotes', {
-    user: { //This field, as well as voted_for, should both be Near Wallet IDs.
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    votedFor: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    votecount: {
-        type: DataTypes.FLOAT,
-        allowNull: false
-    }
-},
-{ freezeTableName: true });
 
 
 
@@ -48,7 +31,7 @@ export default class Utilities {
 
     static get_instance () {
         if(Utilities.__instance == null) {
-            Utilities();
+            new Utilities();
         }
         return Utilities.__instance;
     }
@@ -61,6 +44,21 @@ export default class Utilities {
             this.start_time = Date.now();
             this.DB_PATH = database_path;
             this.db = new Sequelize(database_path); //TODO: implement the database; modify queries to it accordingly.
+            this.UserVotes = this.db.define('uservotes', {
+                user: { //This field, as well as voted_for, should both be Near Wallet IDs.
+                    type: DataTypes.STRING,
+                    allowNull: false
+                },
+                votedFor: {
+                    type: DataTypes.STRING,
+                    allowNull: false
+                },
+                votecount: {
+                    type: DataTypes.FLOAT,
+                    allowNull: false
+                }
+            },
+            { freezeTableName: true });
         }
 
     }
@@ -107,7 +105,7 @@ export default class Utilities {
     }
     //A series of databse functions follow. Modify based on db implementation.
     update_vote(user, voted_for, vote_quantity) {
-        query = (`INSERT OR REPLACE INTO uservotes VALUES (${user},${voted_for},IFNULL((SELECT votecount ` +
+        let query = (`INSERT OR REPLACE INTO uservotes VALUES (${user},${voted_for},IFNULL((SELECT votecount ` +
             `FROM uservotes WHERE user = ${user} AND votedFor = ${voted_for}),0)+${vote_quantity})`); 
         this.db.query(query);
     }
@@ -124,16 +122,16 @@ export default class Utilities {
 
     get_total_votes(){
         const query = "SELECT sum(votecount) from uservotes where user is not 0";
-        return this.db.query(query)[0][0];
+        return this.db.query(query);
     }
 
     get_all_user_votes(){
-        return UserVotes.findAll();
+        return this.UserVotes.findAll();
     }
 
-    get_users() {
+    async get_users() {
         const query = "SELECT user from (SELECT user FROM uservotes UNION SELECT votedFor as user FROM uservotes)";
-        const [result, metadata] = this.db.query(query);
+        const result = await this.db.query(query, {type: QueryTypes.SELECT});
         let users = [];
         for (let i = 0; i < result.length; i++) {
             let sublist = reult[i];

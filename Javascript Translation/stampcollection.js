@@ -3,6 +3,7 @@ import Utilities from "./utilities";
 const {Matrix, solve} = require('ml-matrix'); //npm install this
 const readline = require('readline');
 const f = require('fs');
+const stampy_id = "stampy";
 
 const admin_usernames = []; //Either fill with admins, or remove
 
@@ -26,7 +27,7 @@ class StampsModule {
         this.utils.update_vote(god_id, rob_id); //Generate start set IDs and replace these
     }
 
-    update_vote(stamp_type, from_id, to_id, negative=false, recalculate=true){
+    async update_vote(stamp_type, from_id, to_id, negative=false, recalculate=true){
         if (to_id == stampy_id) {
             //votes for stampy do nothing
             return;
@@ -50,7 +51,7 @@ class StampsModule {
 
         this.total_votes += vote_strength;
         this.utils.update_vote(from_id, to_id, vote_strength);
-        this.utils.users = this.utils.get_users();
+        this.utils.users = await this.utils.get_users();
         this.utils.update_ids_list();
         if (recalculate) {
             this.calculate_stamps();
@@ -58,12 +59,12 @@ class StampsModule {
 
     }
 
-    calculate_stamps() {
+    async calculate_stamps() {
         //set up and solve the system of linear equations
         console.log("RECALCULATING STAMP SCORES");
 
-        this.utils.users = this.utils.get_users();
-        this.users.update_ids_list();
+        this.utils.users = await this.utils.get_users();
+        this.utils.update_ids_list();
 
         let user_count = this.utils.users.length;
 
@@ -101,9 +102,9 @@ class StampsModule {
         //done
     }
 
-    get_user_scores() {
+    async get_user_scores() {
         const message = "Here are the users and how many stamps they're worth:\n";
-        this.utils.users = this.utils.get_users();
+        this.utils.users = await this.utils.get_users();
         for (let i = 0; i < this.utils.users.length; i++) {
             let user_id = this.utils.users[i];
             let name = "<@" + String(user_id) + ">"; //Format as necessary
@@ -113,9 +114,9 @@ class StampsModule {
         return message;
     }
 
-    print_all_scores() {
+    async print_all_scores() {
         let total_stamps = 0;
-        this.utils.users = this.utils.get_users();
+        this.utils.users = await this.utils.get_users();
         for (let i = 0; i < this.utils.users.length; i++) {
             let user_id = this.utils.users[i];
             let name = "<@" + String(user_id) + ">"; //Format as necessary
