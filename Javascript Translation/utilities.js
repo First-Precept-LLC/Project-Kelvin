@@ -110,18 +110,18 @@ export default class Utilities {
     }
     //A series of databse functions follow. Modify based on db implementation.
     async update_vote(user, voted_for, vote_quantity) {
-        let query = (`INSERT OR REPLACE INTO uservotes VALUES (${user},${voted_for},IFNULL((SELECT votecount ` +
-            `FROM uservotes WHERE user = ${user} AND votedFor = ${voted_for}),0)+${vote_quantity})`); 
+        let query = (`INSERT OR REPLACE INTO uservotes (user, votedFor, votecount) VALUES ('${user}','${voted_for}',IFNULL((SELECT votecount ` +
+            `FROM uservotes WHERE user = '${user}' AND votedFor = '${voted_for}'),0)+${vote_quantity})`); 
         await this.db.query(query);
     }
 
     async get_votes_by_user(user){
-        const query = `SELECT IFNULL(sum(votecount),0) FROM uservotes where user = ${user}`;
+        const query = `SELECT IFNULL(sum(votecount),0) FROM uservotes where user = '${user}'`;
         return (await this.db.query(query))[0][0]["sum(votecount)"];
     }
 
     async get_votes_for_user(user){
-        const query = `SELECT IFNULL(sum(votecount),0) FROM uservotes where votedFor = ${user}`;
+        const query = `SELECT IFNULL(sum(votecount),0) FROM uservotes where votedFor = '${user}'`;
         return (await this.db.query(query))[0][0]["sum(votecount)"];
     }
 

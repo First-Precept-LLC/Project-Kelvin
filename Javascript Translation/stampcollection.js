@@ -190,4 +190,6 @@ let test = async function() {
     await testStamp.print_all_scores();
 }
 
-test();
+test().catch(
+    error => console.log(error.stack)
+);;
