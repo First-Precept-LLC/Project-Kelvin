@@ -49,9 +49,15 @@ export default class Utilities {
                     type: DataTypes.STRING,
                     allowNull: false
                 },
+                sourceName: {
+                    type: DataTypes.STRING
+                },
                 votedFor: {
                     type: DataTypes.STRING,
                     allowNull: false
+                },
+                targetTransaction: {
+                    type: DataTypes.STRING
                 },
                 votecount: {
                     type: DataTypes.FLOAT,
@@ -64,7 +70,7 @@ export default class Utilities {
     }
 
     async init() {
-        await this.db.query("CREATE TABLE IF NOT EXISTS uservotes (user VARCHAR(64), votedFor VARCHAR(64), votecount FLOAT, id VARCHAR(64), createdAt BIGINT, updatedAt BIGINT)");
+        await this.db.query("CREATE TABLE IF NOT EXISTS uservotes (user VARCHAR(64), sourceName VARCHAR(2048), votedFor VARCHAR(64), targetTransaction VARCHAR(2048), votecount FLOAT, id VARCHAR(64), createdAt BIGINT, updatedAt BIGINT)");
         await this.UserVotes.create({user: "alice", votedFor: "bob", votecount: 7});
     }
 
@@ -109,8 +115,8 @@ export default class Utilities {
         return 0.0;
     }
     //A series of databse functions follow. Modify based on db implementation.
-    async update_vote(user, voted_for, vote_quantity) {
-        let query = (`INSERT OR REPLACE INTO uservotes (user, votedFor, votecount) VALUES ('${user}','${voted_for}',IFNULL((SELECT votecount ` +
+    async update_vote(user, user_name, voted_for, voted_for_transaction, vote_quantity) {
+        let query = (`INSERT OR REPLACE INTO uservotes (user, sourceName, votedFor, targetTransaction, votecount) VALUES ('${user}', '${user_name}', '${voted_for}', '${voted_for_transaction}', IFNULL((SELECT votecount ` +
             `FROM uservotes WHERE user = '${user}' AND votedFor = '${voted_for}'),0)+${vote_quantity})`); 
         await this.db.query(query);
     }

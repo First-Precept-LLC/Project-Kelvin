@@ -31,7 +31,7 @@ class StampsModule {
         this.utils.update_vote(god_id, rob_id); //Generate start set IDs and replace these
     }
 
-    async update_vote(stamp_type, from_id, to_id, negative=false, recalculate=true){
+    async update_vote(stamp_type, from_id, from_name, to_id, to_transaction, negative=false, recalculate=true){
         if (to_id == stampy_id) {
             //votes for stampy do nothing
             return;
@@ -54,7 +54,7 @@ class StampsModule {
         }
 
         this.total_votes += vote_strength;
-        await this.utils.update_vote(from_id, to_id, vote_strength);
+        await this.utils.update_vote(from_id, from_name, to_id, to_transaction, vote_strength);
         this.utils.users = await this.utils.get_users();
         this.utils.update_ids_list();
         if (recalculate) {
@@ -185,11 +185,12 @@ let testStamp = new StampsModule();
 let test = async function() {
     await testStamp.init();
 
-    await testStamp.update_vote("goldstamp", "alice_near_id", "bob_near_id");
+    await testStamp.update_vote("goldstamp", "alice_near_id", "alice_name", "bob_near_id", "bob_transaction");
 
     await testStamp.print_all_scores();
 }
 
 test().catch(
     error => console.log(error.stack)
-);;
+);
+
