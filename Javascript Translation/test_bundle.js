@@ -107,7 +107,7 @@ class Utilities {
 
     async init() {
         await this.db.query("CREATE TABLE IF NOT EXISTS uservotes (user VARCHAR(64), sourceName VARCHAR(2048), votedFor VARCHAR(64), targetTransaction VARCHAR(2048), votecount FLOAT, id VARCHAR(64), createdAt BIGINT, updatedAt BIGINT)");
-        await this.UserVotes.create({user: "alice", votedFor: "bob", votecount: 7});
+        await this.UserVotes.create({user: "alice", sourceName: "seed_username", votedFor: "bob", targetTransaction: "seed_transaction",  votecount: 7});
     }
 
     clearVotes() {
@@ -367,8 +367,12 @@ let test = async function() {
     await testStamp.init();
 
     await testStamp.update_vote("goldstamp", "alice_near_id", "alice_name", "bob_near_id", "bob_transaction");
+    await testStamp.update_vote("goldstamp", "alice_near_id", "alice_name", "bob_near_id", "bob_transaction2");
 
     await testStamp.print_all_scores();
+
+    const allVotes = await testStamp.utils.UserVotes.findAll();
+    console.log(JSON.stringify(allVotes));
 }
 
 test().catch(

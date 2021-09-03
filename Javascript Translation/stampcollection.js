@@ -186,8 +186,12 @@ let test = async function() {
     await testStamp.init();
 
     await testStamp.update_vote("goldstamp", "alice_near_id", "alice_name", "bob_near_id", "bob_transaction");
+    await testStamp.update_vote("goldstamp", "alice_near_id", "alice_name", "bob_near_id", "bob_transaction2");
 
     await testStamp.print_all_scores();
+
+    const allVotes = await testStamp.utils.UserVotes.findAll();
+    console.log(JSON.stringify(allVotes));
 }
 
 test().catch(
