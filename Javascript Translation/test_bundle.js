@@ -1,40 +1,19 @@
 const {Sequelize, DataTypes, QueryTypes} = require("sequelize");
+const { MongoClient } = require('mongodb');
 let sqlite3 = require("sqlite3").verbose();
 const stampy_id = "stampy";
 
 
 
-const database_path = "sqlite::memory"; //replace with whatever database gets used in final result
-//const database_path = "postgres://"
+//const database_path = "sqlite::memory"; //replace with whatever database gets used in final result
+const database_path = "mongodb+srv://admin:jellynightfatherwheel@cluster0.7phke.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
 
-let db = new Sequelize(database_path); //TODO: implement the database; modify queries to it accordingly.
-db.query("CREATE TABLE IF NOT EXISTS uservotes (user VARCHAR(64), votedFor VARCHAR(64), votecount FLOAT)");
-let UserVotes = db.define('uservotes', {
-    user: { //This field, as well as voted_for, should both be Near Wallet IDs.
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    sourceName: {
-        type: DataTypes.STRING
-    },
-    votedFor: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    targetTransaction: {
-        type: DataTypes.STRING
-    },
-    votecount: {
-        type: DataTypes.FLOAT,
-        allowNull: false
-    }
-},
-{ freezeTableName: true });
+let client = new MongoClient(database_path, { useNewUrlParser: true, useUnifiedTopology: true });//TODO: implement the database; modify queries to it accordingly.
 
 const {Matrix, solve} = require('ml-matrix'); //npm install this
 const readline = require('readline');
 const f = require('fs');
-const { findByPk } = require("sequelize/lib/model");
+const { findByPk, sum } = require("sequelize/lib/model");
 
 const admin_usernames = []; //Either fill with admins, or remove
 
@@ -78,41 +57,17 @@ class Utilities {
         } else {
             Utilities.__instance = this;
             this.start_time = Date.now();
-            this.DB_PATH = database_path;
-            this.db = new Sequelize(database_path); //TODO: implement the database; modify queries to it accordingly.
-            this.UserVotes = this.db.define('uservotes', {
-                user: { //This field, as well as voted_for, should both be Near Wallet IDs.
-                    type: DataTypes.STRING,
-                    allowNull: false
-                },
-                sourceName: {
-                    type: DataTypes.STRING
-                },
-                votedFor: {
-                    type: DataTypes.STRING,
-                    allowNull: false
-                },
-                targetTransaction: {
-                    type: DataTypes.STRING
-                },
-                votecount: {
-                    type: DataTypes.FLOAT,
-                    allowNull: false
-                }
-            },
-            { freezeTableName: true });
         }
 
     }
 
     async init() {
-        await this.db.query("CREATE TABLE IF NOT EXISTS uservotes (user VARCHAR(64), sourceName VARCHAR(2048), votedFor VARCHAR(64), targetTransaction VARCHAR(2048), votecount FLOAT, id VARCHAR(64), createdAt BIGINT, updatedAt BIGINT)");
-        await this.UserVotes.create({user: "alice", sourceName: "seed_username", votedFor: "bob", targetTransaction: "seed_transaction",  votecount: 7});
+        await client.connect();
+        this.UserVotes = client.db("Kelvin").collection("uservotes");
     }
 
-    clearVotes() {
-        const query = "DELETE FROM uservotes";
-        this.db.query(query);
+    async clearVotes() {
+        await this.UserVotes.deleteMany({});
     }
 
     update_ids_list() {
@@ -151,37 +106,58 @@ class Utilities {
         return 0.0;
     }
     //A series of databse functions follow. Modify based on db implementation.
-    async update_vote(user, user_name, voted_for, voted_for_transaction, vote_quantity) {
-        let query = (`INSERT OR REPLACE INTO uservotes (user, sourceName, votedFor, targetTransaction, votecount) VALUES ('${user}', '${user_name}', '${voted_for}', '${voted_for_transaction}', IFNULL((SELECT votecount ` +
-            `FROM uservotes WHERE user = '${user}' AND votedFor = '${voted_for}'),0)+${vote_quantity})`); 
-        await this.db.query(query);
+    async update_vote(userwallet, user_name, voted_for, voted_for_transaction, vote_quantity) {
+        let insertedObj = {
+            user: userwallet,
+            sourceName: user_name,
+            votedFor: voted_for,
+            targetTransaction: voted_for_transaction,
+            votecount: vote_quantity 
+        };
+        await this.UserVotes.insertOne(insertedObj);
     }
 
-    async get_votes_by_user(user){
-        const query = `SELECT IFNULL(sum(votecount),0) FROM uservotes where user = '${user}'`;
-        return (await this.db.query(query))[0][0]["sum(votecount)"];
+    async get_votes_by_user(userwallet){
+        let allUserVotes = await this.UserVotes.find({user: userwallet}).toArray();
+        let total = 0;
+        for (let i = 0; i < allUserVotes.length; i++) {
+            total += allUserVotes[i].votecount;
+        }
+        return total;
     }
 
-    async get_votes_for_user(user){
-        const query = `SELECT IFNULL(sum(votecount),0) FROM uservotes where votedFor = '${user}'`;
-        return (await this.db.query(query))[0][0]["sum(votecount)"];
+    async get_votes_for_user(userwallet){
+        let allUserVotes = await this.UserVotes.find({votedFor: userwallet}).toArray();
+        let total = 0;
+        for (let i = 0; i < allUserVotes.length; i++) {
+            total += allUserVotes[i].votecount;
+        }
+        return total;
     }
 
     async get_total_votes(){
-        const query = "SELECT sum(votecount) from uservotes where user is not 0";
-        return (await this.db.query(query))[0][0]["sum(votecount)"];
+        let allUserVotes = await this.UserVotes.find({}).toArray();
+        let total = 0;
+        for (let i = 0; i < allUserVotes.length; i++) {
+            total += allUserVotes[i].votecount;
+        }
+        return total;
     }
 
     async get_all_user_votes(){
-        return await this.UserVotes.findAll();
+        return await this.UserVotes.find({}).toArray();
     }
 
     async get_users() {
-        const query = "SELECT user from (SELECT user FROM uservotes UNION SELECT votedFor as user FROM uservotes)";
-        const result = (await this.db.query(query, {type: QueryTypes.SELECT}));
         let users = [];
-        for (let i = 0; i < result.length; i++) {
-            users.push(result[i]["user"]);
+        let allUserVotes = await this.UserVotes.find({}).toArray();
+        for (let i = 0; i < allUserVotes.length; i++) {
+            if(! users.includes(allUserVotes[i].user)) {
+                users.push(allUserVotes[i].user);
+            }
+            if(! users.includes(allUserVotes[i].votedFor)) {
+                users.push(allUserVotes[i].votedFor);
+            }
         }
         return users;
     }
@@ -373,6 +349,7 @@ let test = async function() {
 
     const allVotes = await testStamp.utils.UserVotes.findAll();
     console.log(JSON.stringify(allVotes));
+    client.close();
 }
 
 test().catch(

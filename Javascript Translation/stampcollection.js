@@ -192,6 +192,7 @@ let test = async function() {
 
     const allVotes = await testStamp.utils.UserVotes.findAll();
     console.log(JSON.stringify(allVotes));
+    testStamp.utils.client.close();
 }
 
 test().catch(
