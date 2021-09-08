@@ -55,6 +55,7 @@ class Utilities {
         if(Utilities.__instance != null) {
             throw "This class is a singleton!"
         } else {
+            this.client = client;
             Utilities.__instance = this;
             this.start_time = Date.now();
         }
