@@ -44,7 +44,7 @@ export default class Utilities {
             Utilities.__instance = this;
             this.start_time = Date.now();
         }
-        this.client = client;
+
     }
 
     async init() {
@@ -114,6 +114,15 @@ export default class Utilities {
 
     async get_votes_for_user(userwallet){
         let allUserVotes = await this.UserVotes.find({votedFor: userwallet}).toArray();
+        let total = 0;
+        for (let i = 0; i < allUserVotes.length; i++) {
+            total += allUserVotes[i].votecount;
+        }
+        return total;
+    }
+
+    async get_votes_by_transaction(transaction){
+        let allUserVotes = await this.UserVotes.find({targetTransaction: transaction}).toArray();
         let total = 0;
         for (let i = 0; i < allUserVotes.length; i++) {
             total += allUserVotes[i].votecount;

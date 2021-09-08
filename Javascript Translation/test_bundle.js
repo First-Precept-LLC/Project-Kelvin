@@ -135,6 +135,15 @@ class Utilities {
         return total;
     }
 
+    async get_votes_by_transaction(transaction){
+        let allUserVotes = await this.UserVotes.find({targetTransaction: transaction}).toArray();
+        let total = 0;
+        for (let i = 0; i < allUserVotes.length; i++) {
+            total += allUserVotes[i].votecount;
+        }
+        return total;
+    }
+
     async get_total_votes(){
         let allUserVotes = await this.UserVotes.find({}).toArray();
         let total = 0;
