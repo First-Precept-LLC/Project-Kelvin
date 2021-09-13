@@ -16,6 +16,9 @@ class StampsModule {
         this.utils = Utilities.get_instance();
         this.red_stamp_value = 1;
         this.gold_stamp_value = this.red_stamp_value * 5;
+		this.half_red_stamp_value = .5;
+		this.half_gold_stamp_value = 2.5;
+		
         this.user_karma = 1.0;
     }
 
@@ -47,7 +50,11 @@ class StampsModule {
             vote_strength = this.red_stamp_value;
         } else if (stamp_type == "goldstamp") {
             vote_strength = this.gold_stamp_value;
-        }
+        } else if (stamp_type == "halfstamp") {
+			vote_strength = this.half_red_stamp_value
+		} else if (stamp_type == "halfgoldstamp") {
+			vote_strength = this.half_gold_stamp_value;
+		}
 
         if (negative) {
             vote_strength = -vote_strength;
@@ -133,15 +140,16 @@ class StampsModule {
     }
 
     get_user_stamps(user) {
+		if (!user) {
+			return 0;
+		}
         let index = this.utils.index_dammit(user);
         console.log("get_user_stamps for " + String(user)+ ", index=" + String(index));
-        let stamps = 0.0;
-        if (index) { //Might remove depending on if user 0 is stampy or otherwise distinct, which this originally assumed.
-            stamps = this.utils.scores[index] * this.total_votes;
-            console.log(stamps);
-            console.log(this.utils.scores[index]);
-            console.log(this.total_votes);
-        }
+        let stamps = 0.0; //Maybe readd nonzero predicate when seed users are figured out?
+        stamps = this.utils.scores[index] * this.total_votes;
+        console.log(stamps);
+        console.log(this.utils.scores[index]);
+        console.log(this.total_votes);
         return stamps;
     }
 
@@ -192,7 +200,7 @@ let test = async function() {
 
     const allVotes = await testStamp.utils.UserVotes.findAll();
     console.log(JSON.stringify(allVotes));
-    testStamp.utils.client.close();
+    client.close();
 }
 
 test().catch(

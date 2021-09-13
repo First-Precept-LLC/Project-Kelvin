@@ -67,6 +67,7 @@ export default class Utilities {
     }
 
     index_dammit(user) {
+		console.log(user);
         //get an index into the scores array from whatever you get.
         if (user in this.index) {
             //maybe we got a valid ID?
