@@ -205,11 +205,11 @@ class StampsModule {
     async update_vote(stamp_type, from_id, from_name, to_id, to_transaction, negative=false, recalculate=true){
         if (to_id == stampy_id) {
             //votes for stampy do nothing
-            return;
+            return false;
         }
         if(to_id == from_id) {
             //votes for yourself do nothing
-            return;
+            return false;
         }
 
         let vote_strength = 0;
@@ -235,7 +235,7 @@ class StampsModule {
         if (recalculate) {
             this.calculate_stamps();
         }
-
+        return true;
     }
 
     async calculate_stamps() {
@@ -249,7 +249,7 @@ class StampsModule {
 
         let users_matrix = Matrix.zeros(user_count, user_count);
 
-        let votes = this.utils.get_all_user_votes();
+        let votes = await this.utils.get_all_user_votes();
         console.log(votes);
 
         for(let i = 0; i < votes.length; i++) {
