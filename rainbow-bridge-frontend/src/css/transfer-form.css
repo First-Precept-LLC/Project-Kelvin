@@ -1,0 +1,208 @@
+.transfer-form {
+  display: flex;
+  flex-direction: column;
+  margin-top: 5rem !important;
+  width: 100%;
+}
+
+@media (min-width: 600px) {
+  .transfer-form {
+    max-width: 440px;
+    margin: 0 auto;
+  }
+}
+
+.transfer-form > header {
+  margin: 0 auto var(--spacing-xxl);
+  max-width: 15em;
+  text-align: center;
+}
+.transfer-form .account {
+  background-color: var(--gray-100);
+  margin: 0 auto;
+  width: 100%;
+}
+
+.account.account--origin {
+  padding: var(--spacing-m);
+}
+
+@media (min-width: 25em) {
+  .transfer-form > .account {
+    border-radius: 4px;
+  }
+}
+.transfer-form > .account > header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--fs-small);
+}
+
+.account--origin__token-details {
+  color: var(--gray-600);
+  display: none;
+  align-items: center;
+  font-size: var(--fs-small);
+  justify-content: space-between;
+}
+
+.account--origin__token-details:last-child {
+  margin-top: var(--spacing-s);
+}
+
+.account--origin__token-details label,
+.account--destination__token-details label {
+  color: var(--gray-600);
+  margin: 0;
+}
+
+.account--destination__token-details label {
+  font-size: var(--fs-small);
+}
+
+.account--destination header {
+  padding: var(--spacing-m);
+}
+
+.account--destination__token-details {
+  display: none;
+  border-top: 1px solid var(--light-gray);
+  color: var(--gray-600);
+  font-size: var(--fs-small);
+  justify-content: space-between;
+  padding: var(--spacing-m);
+}
+
+.account--destination__token-details strong {
+  color: var(--gray-800);
+  font-weight: var(--fw-bold);
+}
+
+.transfer-form .inputs {
+  border-radius: 0.75em;
+  display: flex;
+  background-color: var(--white);
+  align-items: center;
+  margin: var(--spacing-m) 0 var(--spacing-s) 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  height: 56px;
+}
+.transfer-form .inputs > * {
+  border: none;
+}
+.transfer-form .inputs input:last-child {
+  background-color: var(--white);
+}
+.transfer-form .inputs .selectButton {
+  background-color: var(--white);
+  align-items: center;
+  border-radius: 0.5rem 0 0 0.5rem;
+  border-right: 1px solid var(--gray-200);
+  color: var(--fg-bold);
+  white-space: nowrap;
+  display: flex;
+}
+.transfer-form .inputs .selectButton:after {
+  content: " ";
+  background-image: url(/img/chevron-down-blue.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: block;
+
+  margin-left: 0.5em;
+  width: 1.3rem;
+  height: 2rem;
+}
+button.maxAmount {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-micro);
+  background-color: var(--blue-100);
+  height: 30px;
+  padding-right: var(--spacing-xs);
+  padding-left: var(--spacing-xs);
+  margin-left: var(--spacing-m);
+}
+/* add "selected" class after user selects an ERC20 token */
+.transfer-form .inputs button:not(.selected) {
+  color: var(--blue-500);
+}
+.transfer-form .inputs input {
+  border-radius: 0 0.5rem 0.5rem 0;
+  font-size: 1.4em;
+  font-weight: 900;
+}
+.transfer-form .inputs *:disabled {
+  color: var(--gray-600);
+  cursor: not-allowed;
+}
+.transfer-form .inputs input[type="number"]::-webkit-inner-spin-button,
+.transfer-form .inputs input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.transfer-form input {
+  text-align: right;
+}
+.transfer-form footer {
+  display: flex;
+  flex-direction: column;
+  margin: var(--spacing-xxl) 0;
+  padding: var(--spacing-m);
+}
+
+.transfer-form > .arrow {
+  background: url("../img/arrow-down.svg") no-repeat;
+  background-size: contain;
+  height: 1.5em;
+  width: 1.5em;
+  margin: 1em auto;
+}
+
+.token-selector {
+  width: 360px;
+}
+
+.token-selector-section__header {
+  margin-bottom: var(--spacing-m);
+  font-size: var(--fs-micro);
+  color: var(--gray-600);
+}
+
+.token-selector-section__header div {
+  margin-top: var(--spacing-l);
+}
+
+.token-selector .token-list input[type="radio"] {
+  display: none;
+  margin: 0 -16px;
+}
+
+.token-selector .token-list label {
+  display: flex;
+  color: var(--gray-800);
+  cursor: pointer;
+  font-size: var(--fs-heading-4);
+  font-weight: var(--fw-bold);
+  padding: var(--spacing-m);
+  margin: 0 calc(-1 * var(--spacing-m));
+}
+
+.token-selector .token-list label:hover,
+.token-selector .token-list label:focus {
+  background-color: var(--gray-100);
+}
+
+.token-selector .token-list label span {
+  display: flex;
+  align-items: center;
+}
+
+.token-selector .token-list img {
+  width: 1.5em;
+  margin-right: 1em;
+}

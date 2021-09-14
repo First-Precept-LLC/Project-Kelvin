@@ -1,0 +1,20 @@
+name: Lint
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+jobs:
+  lint:
+    name: Check codebase linting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone the repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Check codebase linting
+        run: |
+          yarn install
+          yarn lint
+          yarn commitlint

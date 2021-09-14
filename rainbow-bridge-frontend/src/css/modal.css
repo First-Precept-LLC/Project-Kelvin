@@ -1,0 +1,112 @@
+.modal {
+  background-color: rgba(39, 39, 41, 0.7);
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: space-around;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+}
+
+/* modal expects one immediate child */
+.modal > * {
+  background-color: var(--white);
+  border-radius: 0.5em;
+  margin: 0 auto;
+  max-height: 90vh;
+}
+
+.modal__container {
+  overflow-y: auto;
+  padding: var(--spacing-m);
+  margin: 0 var(--spacing-m);
+}
+
+@media (min-width: 600px) {
+  .modal__container {
+    margin: 0 auto;
+    max-width: 440px;
+  }
+}
+
+.modal-section__label {
+  font-size: var(--fs-small);
+  font-weight: var(--fw-bold);
+  padding-bottom: var(--spacing-s);
+}
+
+.modal-section__separator {
+  text-align: center;
+  position: relative;
+  font-size: var(--fs-small);
+  color: var(--gray-600);
+  margin: 0 calc(-1 * var(--spacing-m));
+  padding: var(--spacing-m) 0;
+}
+
+.modal-section__separator::before,
+.modal-section__separator::after {
+  content: "";
+  border-top: 1px solid var(--gray-200);
+  top: 50%;
+  position: absolute;
+  width: 35%;
+}
+
+.modal-section__separator::before {
+  left: 0;
+}
+
+.modal-section__separator::after {
+  right: 0;
+}
+
+.modal__image {
+  display: block;
+}
+
+.modal-image__container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  padding: 32px;
+  width: 100%;
+}
+
+.modal__heading {
+  font-size: var(--fs-heading-4);
+  text-align: center;
+  margin: 0 0 var(--spacing-xl);
+}
+
+.modal__message,
+.modal__cta {
+  color: var(--gray-600);
+  font-size: var(--fs-small);
+  line-height: var(--lh-copy);
+  text-align: center;
+  margin-bottom: var(--spacing-xl)
+}
+
+.modal__cta {
+  margin: var(--spacing-l) 0 var(--spacing-xl);
+}
+
+/* child must have nav element with one close button within */
+.modal__nav {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.modal__nav__button--close {
+  background: url(../img/cross.svg);
+  background-size: 100% 100%;
+}
+
+.modal__nav__button--close:hover,
+.modal__nav__button--close:focus {
+  background-color: var(--gray-200);
+}

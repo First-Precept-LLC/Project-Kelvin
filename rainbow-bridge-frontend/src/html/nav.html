@@ -1,0 +1,359 @@
+<nav class="site-nav">
+  <div class="site-nav__wrapper">
+    <a class="navLogo" data-behavior="navLogo" href="/index.html" title="Home"
+      >Home<span class="beta-tag">Beta</span></a
+    >
+
+    <div data-behavior="bridgesDropdown" class="bridges-nav">
+      <div
+        id="bridge-dropdown"
+        class="dropdown bridge-dropdown"
+        aria-live="polite"
+      >
+        <button aria-controls="bridge-dropdown" class="dropdown-trigger">
+          <span class="bridge-indicator" style="background-color: #29b6af">
+            <span class="visually-hidden">Connected</span>
+          </span>
+          <span data-behavior="bridgeName">Near ↔︎ Ethereum</span>
+        </button>
+        <div class="dropdown-list" data-behavior="dropdownList"></div>
+      </div>
+    </div>
+  </div>
+  <div class="site-nav__wrapper">
+    <div
+      data-behavior="accountsDropdown"
+      class="accounts-nav"
+      style="display: none"
+    >
+      <div
+        id="accounts-dropdown"
+        class="dropdown account-dropdown"
+        aria-live="polite"
+      >
+        <button aria-controls="accounts-dropdown" class="dropdown-trigger">
+          <img
+            data-behavior="ethConnected"
+            style="width: 1.5rem"
+            alt="Ethereum"
+            src="img/ethereum.svg"
+          />
+          <img style="width: 1.5rem" alt="NEAR" src="img/near.svg" />
+        </button>
+        <div class="right dropdown-list">
+          <label class="dropdown-list__heading">Connected Accounts</label>
+          <div data-behavior="ethConnected" class="dropdown-list__item">
+            <span
+              class="account-with-icon reverse ethereum"
+              data-behavior="ethUser"
+            ></span>
+            <button
+              class="button-size--small button-variant--secondary"
+              data-behavior="disconnectEthereum"
+            >
+              Disconnect
+            </button>
+          </div>
+          <div data-behavior="nearConnected" class="dropdown-list__item">
+            <span
+              class="account-with-icon reverse near"
+              data-behavior="nearUser"
+            ></span>
+            <button
+              class="button-size--small button-variant--secondary"
+              data-behavior="disconnectNear"
+            >
+              Disconnect
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<style>
+  .site-nav__wrapper {
+    display: flex;
+    align-items: center;
+  }
+
+  .site-nav {
+    background-color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--header-height);
+    padding: 0 var(--spacing-m);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    border-bottom: 1px solid var(--gray-200);
+    z-index: 2;
+  }
+
+  .navLogo {
+    background: url(/img/rainbow-bridge.svg) no-repeat;
+    height: 32px;
+    width: 51px;
+    display: block;
+    margin-right: var(--spacing-xxl);
+    text-indent: -999px;
+    position: relative;
+    padding-right: 104px;
+  }
+
+  .navLogo .beta-tag {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    text-indent: 0;
+    transform: translateY(-50%);
+  }
+
+  .dropdown {
+    font-size: var(--fs-micro);
+    position: relative;
+    z-index: 1;
+  }
+
+  .dropdown-trigger {
+    background-color: var(--white);
+    border: 1px solid var(--gray-200);
+    color: var(--gray-700);
+    display: flex;
+    align-items: center;
+    height: 48px;
+    width: 100%;
+    font-weight: var(--fw-regular);
+    padding-right: var(--spacing-xxl);
+  }
+
+  .dropdown-trigger::after {
+    content: " ";
+    background-image: url(/img/chevron-down.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 16px;
+    position: absolute;
+    right: var(--spacing-m);
+    top: 0;
+    bottom: 0;
+  }
+
+  .dropdown-trigger:hover {
+    background-color: var(--gray-100);
+  }
+
+  .dropdown-list {
+    width: 24em;
+    display: none;
+    background-color: var(--white);
+    border: 1px solid var(--gray-300);
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+    margin: 0;
+    overflow: hidden;
+    padding-top: var(--base-spacing);
+    padding-bottom: var(--base-spacing);
+    text-align: left;
+    min-width: 100%;
+  }
+
+  .dropdown-list__heading {
+    padding: var(--spacing-s) var(--spacing-m) 0;
+  }
+
+  .dropdown-list__item {
+    border-radius: 0;
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-m);
+    font-weight: 400;
+  }
+
+  .dropdown-list__item .arrow-divider {
+    color: var(--gray-500);
+    padding: 0 var(--spacing-s);
+  }
+
+  .bridge-dropdown .dropdown-list__item {
+    height: 40px;
+  }
+
+  .account-dropdown .dropdown-list__item {
+    justify-content: space-between;
+    padding-top: var(--spacing-s);
+    padding-bottom: var(--spacing-s);
+  }
+
+  .dropdown-list__item:hover {
+    background-color: var(--gray-100);
+  }
+
+  .account-dropdown .dropdown-list__item:hover {
+    background-color: transparent;
+  }
+
+  button.dropdown-list__item {
+    border: none;
+    background-color: transparent;
+    color: var(--gray-700);
+    width: 100%;
+  }
+
+  .bridge-indicator {
+    width: 10px;
+    height: 10px;
+    margin-right: var(--spacing-m);
+  }
+
+  .bridge-dropdown .testnet-options {
+    border-top: 1px solid var(--gray-200);
+    margin-top: var(--spacing-s);
+    padding: var(--spacing-m);
+    padding-bottom: var(--spacing-s);
+  }
+
+  .dropdown-trigger img:last-child {
+    margin-left: -4px;
+  }
+
+  .dropdown.active .dropdown-list {
+    display: block;
+    position: absolute;
+    border-radius: 0.5rem;
+    margin-top: var(--spacing-s);
+    z-index: 1;
+  }
+
+  .dropdown.active .dropdown-list.right {
+    right: 0;
+  }
+
+  @media (max-width: 600px) {
+    .bridges-nav {
+      position: fixed;
+    }
+  }
+</style>
+<script>
+  window.addEventListener("load", function addNavEventHandlers() {
+    document.querySelectorAll(".dropdown").forEach((d) => {
+      document.querySelector("body").addEventListener("click", (event) => {
+        const button = d.querySelector("button");
+        const clickedButton = button.contains(event.target);
+        const clickedInDropdown = d.contains(event.target);
+        const classNames = Array.from(d.classList);
+        const active = classNames.includes("active");
+
+        if (!active) {
+          if (clickedButton) {
+            d.className = [...classNames, "active"].join(" ");
+          }
+        } else {
+          if (clickedButton || !clickedInDropdown) {
+            d.className = classNames.filter((c) => c !== "active").join(" ");
+          }
+        }
+      });
+    });
+  });
+
+  window.addEventListener("load", function displaySelectedBridge() {
+    const ethNetworkColors = {
+      main: "#29b6af",
+      ropsten: "#ff4a8d",
+      rinkeby: "#f6c343",
+      goerli: "#2c8eeb",
+    };
+    window.dom.fill("bridgeName").with({
+      innerHTML: window.bridgeName,
+      title: window.bridgeName,
+    });
+    document.querySelectorAll(
+      ".dropdown-trigger > .bridge-indicator"
+    )[0].style.backgroundColor = ethNetworkColors[process.env.ethNetworkId];
+
+    let bridgeName
+    let auroraBridgeName
+    let url
+    let auroraUrl
+    let testnetOrMainnetUrl
+    let testnetOrMainnet
+    if (process.env.nearNetworkId === 'mainnet') {
+      bridgeName = `Ethereum <span class="arrow-divider">↔︎</span> NEAR`
+      auroraBridgeName = `Aurora <span class="arrow-divider">↔︎</span> NEAR`
+      url = 'https://ethereum.bridgetonear.org'
+      auroraUrl = 'https://aurora.bridgetonear.org'
+      testnetOrMainnetUrl = 'https://goerli.bridgetonear.org'
+      testnetOrMainnet = 'testnet'
+    } else {
+      bridgeName = `Goerli <span class="arrow-divider">↔︎</span> NEAR Tesnet`
+      auroraBridgeName = `Aurora Testnet <span class="arrow-divider">↔︎</span> NEAR Testnet`
+      url = 'https://goerli.bridgetonear.org'
+      auroraUrl = 'https://aurora-testnet.bridgetonear.org'
+      testnetOrMainnetUrl = 'https://ethereum.bridgetonear.org'
+      testnetOrMainnet = 'mainnet'
+    }
+    window.dom.fill("dropdownList").with(
+      `
+        <label class="dropdown-list__heading">Select a bridge</label>
+        <button
+          aria-controls="bridge-dropdown"
+          class="dropdown-list__item"
+          onclick="location.href='${url}';"
+        >
+          <span class="bridge-indicator" style="background-color: ${ethNetworkColors[process.env.ethNetworkId]}">
+            <span class="visually-hidden">Connected</span>
+          </span>
+          <span>${bridgeName}</span>
+        </button>
+          <button
+            aria-controls="bridge-dropdown"
+            class="dropdown-list__item"
+            onclick="location.href='${auroraUrl}';"
+          >
+            <span class="bridge-indicator" style="background-color: var(--aurora-green)">
+              <span class="visually-hidden">Connected</span>
+            </span>
+            <span>
+              ${auroraBridgeName}
+            </span>
+          </button>
+        <div class="testnet-options">
+          <a href=${testnetOrMainnetUrl}>Looking for the ${testnetOrMainnet} bridge?</a>
+        </div>
+      `
+    )
+  });
+
+  async function renderNavLogo() {
+    if (!(window.ethInitialized && window.nearInitialized)) return;
+
+    const transfers = await window.transfers.get();
+    const params = Object.keys(window.urlParams.get());
+
+    if (transfers.length || params.length) {
+      window.dom.show("navLogo");
+    } else {
+      window.dom.hide("navLogo");
+    }
+  }
+
+  function renderAccountsDropdown() {
+    if (window.ethInitialized) window.dom.show("ethConnected");
+    else window.dom.hide("ethConnected");
+
+    if (window.nearInitialized) window.dom.show("nearConnected");
+    else window.dom.hide("nearConnected");
+
+    if (window.ethInitialized || window.nearInitialized) {
+      window.dom.show("accountsDropdown");
+    } else {
+      window.dom.hide("accountsDropdown");
+    }
+  }
+  window.renderers.push(renderNavLogo);
+  window.renderers.push(renderAccountsDropdown);
+</script>

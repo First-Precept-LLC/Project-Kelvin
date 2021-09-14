@@ -1,0 +1,55 @@
+.logo--landing-page {
+  text-align: center;
+  margin: 64px auto 0;
+  width: 300px;
+}
+
+.logo--landing-page .rainbow-icon {
+  width: 72px;
+  margin: 0 auto var(--spacing-m);
+}
+
+.logo--landing-page svg {
+  margin: calc(0.5 * var(--spacing-m)) auto;
+}
+
+.logo--landing-page small {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--gray-600);
+  font-size: var(--base-font-size);
+  margin-bottom: calc(var(--base-spacing) * 8);
+  font-weight: var(--fw-regular);
+}
+
+.logo--landing-page-near, .logo--landing-page-ethereum {
+  font-size: var(--fs-small);
+  padding: var(--spacing-xs) var(--spacing-l);
+  font-weight: var(--fw-regular);
+}
+
+.logo--landing-page-near {
+  background-color: var(--black);
+  color: var(--white);
+}
+
+.logo--landing-page-ethereum {
+  background-color: var(--ethereum-blue);
+  color: var(--white);
+  padding: var(--spacing-xs) var(--spacing-s);
+}
+
+.logo--landing-page small img {
+  margin: 0 var(--spacing-xs);
+}
+
+.logo--landing-page .logo-text--primary {
+  position: relative;
+}
+
+.logo-text--primary .beta-tag {
+  position: absolute;
+  top: -10px;
+  right: -12px;
+}
