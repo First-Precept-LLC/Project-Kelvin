@@ -1,4 +1,9 @@
 // SPDX-License-Identifier: MIT
+
+//Deployed on Ethereum Goerli testnet: 0x97DB500303C219FB11fFded8EADaA8945663D2A5
+//Deployed on Near testner: 97db500303c219fb11ffded8eadaa8945663d2a5.factory.goerli.testnet
+//Deployed on Aurora testnet: 0x7fc383a117f64b29ab012231ae91dab6dfb95043
+
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
