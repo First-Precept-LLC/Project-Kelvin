@@ -114,9 +114,9 @@ export class convoConnector extends React.Component {
   render() {
     console.log(`render start ${JSON.stringify(this.state.threads)}`);
     return (
+      <div className="base-container" ref={this.props.containerRef}>
 
-      <div className="base-container page-wrapper" ref={this.props.containerRef}>
-            <nav class="navbar navbar-light bg-light flow" >
+  <nav class="navbar navbar-light bg-light flow" >
         <div class="container">
             <a class="navbar-brand" href="#">
                 <img src="https://cdn.kulfyapp.com/kelvin/icons8-menu.png" alt="" width="28" height="19.6" />
@@ -129,47 +129,25 @@ export class convoConnector extends React.Component {
             </a>
         </div>
     </nav>
-      <ul class="nav nav-pills nav-fill mt-2 mx-2 ">
+    <ul class="nav nav-pills nav-fill mt-2 mx-2 ">
         <li class="nav-item">
-            <a class="nav-link active color-bg" aria-current="page" href="/flow">Impact Flow</a>
+            <a class="nav-link active color-bg" aria-current="page" href="/add-impact-type">Impact Impact Type</a>
         </li>
         <li class="nav-item">
             <a class="nav-link text-white" href="/convo">Impact Discussion</a>
         </li>
     </ul>
-
-
-    <div class="container ">
-        <div class="discussions">
-            <div class="tread d-flex flex-row mt-3">
-                <img src="assets/images/dp.png" alt="" width="48" height="48" class="me-2"/>
-                <div class="context">
-                    <h6 class="username  color-text">
-                        @John1
-                    </h6>
-                    <p class="message">
-                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nesciunt ad totam debitis. Ratione molestiae voluptatem pariatur doloribus exercitationem nisi quae nihil! Officiis eaque doloribus, ab incidunt esse labore laborum? Consequatur.
-                    </p>
-                </div>
-            </div>
-            <div class="tread d-flex flex-row mt-3">
-                <img src="assets/images/dp.png" alt="" width="48" height="48" class="me-2"/>
-                <div class="context">
-                    <h6 class="username color-text">
-                        @John2
-                    </h6>
-                    <p class="message">
-                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nesciunt ad totam debitis. Ratione molestiae voluptatem pariatur doloribus exercitationem nisi quae nihil! Officiis eaque doloribus, ab incidunt esse labore laborum? Consequatur.
-                    </p>
-                </div>
-            </div>
+    <div class="container flow-container" >
+        <div class="d-flex justify-content-center flex-column mt-5 options-list">
+            <a href="/airline" class="options-item">Airline Flight</a>
+            <a href="#" class="options-item">Shopping</a>
+            <a href="#" class="options-item">Food</a>
         </div>
-        <div class="send">
-            <input type="text" name="message" id="" value="" placeholder="Message"/>
-            <a href="# " class="send-btn "><img src="assets/images/send-btn.svg " alt=" " width="46 " height="47"/></a>
-        </div>
+
 
     </div>
+   
+
       </div>
     )
   }

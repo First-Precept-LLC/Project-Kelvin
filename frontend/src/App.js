@@ -6,6 +6,11 @@ import Form from './components/Form';
 import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
 import Convo from './components/Convo';
+import Flow from './components/Flow';
+import Airline from './components/Airline';
+import Impact from './components/Impact';
+import AddImpact from './components/AddImpact';
+import AddImpactType from './components/AddImpactType';
 import Transactions from './components/Transactions';
 import Messages from './components/Messages';
 import {
@@ -80,46 +85,37 @@ const App = ({ contract, currentUser, nearConfig, wallet }) => {
             <Convo contract={contract} currentUser={currentUser} nearConfig={nearConfig} wallet={wallet}/>
         </Route>
        <Route path="/signin">
-            <SignIn />
+            <SignIn wallet={wallet}/>
         </Route>
         <Route path="/transactions">
             <Transactions />
         </Route>
-
-
-        
+         <Route path="/flow">
+            <Flow />
+        </Route>
+         <Route path="/add-impact">
+            <AddImpact />
+        </Route>
+        <Route path="/add-impact-type">
+            <AddImpactType />
+        </Route>
+         <Route path="/airline">
+            <Airline />
+        </Route>
+         <Route path="/impact">
+            <Impact />
+        </Route>        
     </Switch>
 
 
-       
+      
+<Route exact path="/">
+  {currentUser ? <Redirect to="/transactions" /> : <SignIn />}
+</Route>
   
 
 
-        <nav className="navbar navbar-light bg-light navStyleCustom">
-            <div className="container">
-                <a className="navbar-brand navStyleCustomA" href="#">
-                    <img src="https://cdn.kulfyapp.com/kelvin/logo.png" alt="" width="298" height="35" />
-                </a>
-            </div>
-        </nav><div className="container containerDiv">
-                <div>
-                    <a onClick={signIn}>
-                        <div className="login-button">
-                      
-                            <img src="https://cdn.kulfyapp.com/kelvin/Mask Group 1.png" alt="" />
-
-                            <span>Connect with Near Wallet</span>
-                        </div>
-                    </a>
-                </div>
-                <a href="#">
-                    <div className="login-button">
-                        <img src="https://cdn.kulfyapp.com/kelvin/icons8-facebook.png" alt="" />
-                        <span>Connect with Facebook</span>
-                    </div>
-                </a>
-
-            </div>
+   
 
 
     </main>

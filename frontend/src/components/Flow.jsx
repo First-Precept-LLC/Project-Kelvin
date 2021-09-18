@@ -2,6 +2,7 @@ import React from "react";
 import axios from "axios";
 import { Avatar, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@material-ui/core';
 import ReactDOM from "react-dom";
+import { Dropdown,DropdownButton } from 'react-bootstrap';
 
 export class convoConnector extends React.Component {
   constructor(props) {
@@ -114,9 +115,9 @@ export class convoConnector extends React.Component {
   render() {
     console.log(`render start ${JSON.stringify(this.state.threads)}`);
     return (
+      <div className="base-container" ref={this.props.containerRef}>
 
-      <div className="base-container page-wrapper" ref={this.props.containerRef}>
-            <nav class="navbar navbar-light bg-light flow" >
+  <nav class="navbar navbar-light bg-light flow" >
         <div class="container">
             <a class="navbar-brand" href="#">
                 <img src="https://cdn.kulfyapp.com/kelvin/icons8-menu.png" alt="" width="28" height="19.6" />
@@ -129,7 +130,7 @@ export class convoConnector extends React.Component {
             </a>
         </div>
     </nav>
-      <ul class="nav nav-pills nav-fill mt-2 mx-2 ">
+    <ul class="nav nav-pills nav-fill mt-2 mx-2 ">
         <li class="nav-item">
             <a class="nav-link active color-bg" aria-current="page" href="/flow">Impact Flow</a>
         </li>
@@ -137,39 +138,26 @@ export class convoConnector extends React.Component {
             <a class="nav-link text-white" href="/convo">Impact Discussion</a>
         </li>
     </ul>
+    <div class="container flow-container" >
+        <div class="dropdown btn-small mt-3 d-flex justify-content-center">
+        <DropdownButton class="btn btn-secondary dropdown-toggle"  id="dropdownMenuButton1" title="1 Year">
+  <Dropdown.Item class="dropdown-item" href="#/action-1">1 Year</Dropdown.Item>
+  <Dropdown.Item class="dropdown-item" href="#/action-2">2 Years</Dropdown.Item>
+    <Dropdown.Item class="dropdown-item" href="#/action-3">3 Years</Dropdown.Item>
+      <Dropdown.Item class="dropdown-item" href="#/action-4">4 Years</Dropdown.Item>
+        <Dropdown.Item class="dropdown-item" href="#/action-5">5 Years</Dropdown.Item>
+        
+</DropdownButton>
 
-
-    <div class="container ">
-        <div class="discussions">
-            <div class="tread d-flex flex-row mt-3">
-                <img src="assets/images/dp.png" alt="" width="48" height="48" class="me-2"/>
-                <div class="context">
-                    <h6 class="username  color-text">
-                        @John1
-                    </h6>
-                    <p class="message">
-                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nesciunt ad totam debitis. Ratione molestiae voluptatem pariatur doloribus exercitationem nisi quae nihil! Officiis eaque doloribus, ab incidunt esse labore laborum? Consequatur.
-                    </p>
-                </div>
-            </div>
-            <div class="tread d-flex flex-row mt-3">
-                <img src="assets/images/dp.png" alt="" width="48" height="48" class="me-2"/>
-                <div class="context">
-                    <h6 class="username color-text">
-                        @John2
-                    </h6>
-                    <p class="message">
-                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nesciunt ad totam debitis. Ratione molestiae voluptatem pariatur doloribus exercitationem nisi quae nihil! Officiis eaque doloribus, ab incidunt esse labore laborum? Consequatur.
-                    </p>
-                </div>
-            </div>
         </div>
-        <div class="send">
-            <input type="text" name="message" id="" value="" placeholder="Message"/>
-            <a href="# " class="send-btn "><img src="assets/images/send-btn.svg " alt=" " width="46 " height="47"/></a>
+        <div class="text-circle flow-text" >
+            <p>Sentient Lives</p>
+            <p>+10 - 100</p>
         </div>
-
     </div>
+    <a href="/add-impact" class="add-btn"><img src="https://cdn.kulfyapp.com/kelvin/icons8-add.png" alt="" width="55" height="55" /></a>
+
+
       </div>
     )
   }

@@ -25,6 +25,46 @@
     text-align: center;
 }
 
+.carbon-text {
+    text-align: center;
+    margin-top: 1em;
+}
+
+.temp-circle {
+    margin-left: 50px;
+}
+
+.flow-co2 {
+    margin-left: 6em;
+    transform: rotate(-65deg);
+}
+
+.co2-circle {
+    margin-left: 0em;
+}
+
+.flow-flight {
+    margin-left: 5em;
+    transform: rotate(255deg);
+}
+
+.flight-circle {
+    margin-left: 3em;
+}
+
+.airline-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1em;
+}
+
+.flow-temp {
+    margin-left: 11em;
+    transform: rotate(-60deg);
+}
+
 .r45 {
     transform: rotate(-45deg);
 }
@@ -45,6 +85,28 @@
     display: flex;
     flex-direction: column-reverse !important;
     justify-content: end;
-    height: 100%;
+    height: 80vh;
     padding-bottom: 60px;
+}
+
+.flow {
+    height: 100px;
+    background-color: #F7F8FD;
+}
+
+.flow-brand {
+    margin-right: 0%;
+}
+
+.flow-container {
+    height: 80%;
+}
+
+.flow-text {
+    margin-top: 2em !important;
+}
+
+.b-text {
+    font-size: 16px;
+    font-weight: 700;
 }

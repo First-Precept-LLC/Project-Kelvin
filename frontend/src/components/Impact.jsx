@@ -114,9 +114,9 @@ export class convoConnector extends React.Component {
   render() {
     console.log(`render start ${JSON.stringify(this.state.threads)}`);
     return (
+      <div className="base-container" ref={this.props.containerRef}>
 
-      <div className="base-container page-wrapper" ref={this.props.containerRef}>
-            <nav class="navbar navbar-light bg-light flow" >
+  <nav class="navbar navbar-light bg-light flow" >
         <div class="container">
             <a class="navbar-brand" href="#">
                 <img src="https://cdn.kulfyapp.com/kelvin/icons8-menu.png" alt="" width="28" height="19.6" />
@@ -129,47 +129,46 @@ export class convoConnector extends React.Component {
             </a>
         </div>
     </nav>
-      <ul class="nav nav-pills nav-fill mt-2 mx-2 ">
+    <ul class="nav nav-pills nav-fill mt-2 mx-2 ">
         <li class="nav-item">
-            <a class="nav-link active color-bg" aria-current="page" href="/flow">Impact Flow</a>
+            <a class="nav-link active color-bg" aria-current="page" href="#">Impact Flow</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-white" href="/convo">Impact Discussion</a>
+            <a class="nav-link text-white" href="#">Impact Discussion</a>
         </li>
     </ul>
-
-
-    <div class="container ">
-        <div class="discussions">
-            <div class="tread d-flex flex-row mt-3">
-                <img src="assets/images/dp.png" alt="" width="48" height="48" class="me-2"/>
-                <div class="context">
-                    <h6 class="username  color-text">
-                        @John1
-                    </h6>
-                    <p class="message">
-                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nesciunt ad totam debitis. Ratione molestiae voluptatem pariatur doloribus exercitationem nisi quae nihil! Officiis eaque doloribus, ab incidunt esse labore laborum? Consequatur.
-                    </p>
-                </div>
-            </div>
-            <div class="tread d-flex flex-row mt-3">
-                <img src="assets/images/dp.png" alt="" width="48" height="48" class="me-2"/>
-                <div class="context">
-                    <h6 class="username color-text">
-                        @John2
-                    </h6>
-                    <p class="message">
-                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nesciunt ad totam debitis. Ratione molestiae voluptatem pariatur doloribus exercitationem nisi quae nihil! Officiis eaque doloribus, ab incidunt esse labore laborum? Consequatur.
-                    </p>
-                </div>
-            </div>
+    <div class="container flow-container" >
+        <div class="dropdown btn-small mt-3 d-flex justify-content-center">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+              Year 1
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Another action</a></li>
+                <li><a class="dropdown-item" href="#">Something else here</a></li>
+            </ul>
         </div>
-        <div class="send">
-            <input type="text" name="message" id="" value="" placeholder="Message"/>
-            <a href="# " class="send-btn "><img src="assets/images/send-btn.svg " alt=" " width="46 " height="47"/></a>
+        <div class="text-circle flow-text" >
+            <p>Sentient Lives</p>
+            <p>+10 - 100</p>
         </div>
-
+         <img class="flow-temp" src="https://cdn.kulfyapp.com/kelvin/arrow.svg" alt="" />
+        <div class="text-circle temp-circle" >
+            <p>.01-.1</p>
+            <p>raise in temperature</p>
+        </div>
+        <img  class="flow-co2" src="https://cdn.kulfyapp.com/kelvin/arrow.svg" alt="" />
+        <div class="text-circle co2-circle" >
+            <p class="b-text">.01 tons of CO2</p>
+        </div>
+        <img class="flow-flight"  src="https://cdn.kulfyapp.com/kelvin/arrow.svg" alt="" />
+        <div class="text-circle flight-circle" >
+            <p>Flight from SFO to NYC</p>
+        </div>
     </div>
+    <a href="#" class="add-btn"><img src="https://cdn.kulfyapp.com/kelvin/icons8-add.png" alt="" width="55" height="55" /></a>
+
+
       </div>
     )
   }

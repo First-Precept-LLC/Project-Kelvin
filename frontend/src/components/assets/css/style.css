@@ -1,10 +1,11 @@
 body {
     background-image: linear-gradient(180deg, #A5A4B0, #D2D2DB);
     background-repeat: no-repeat;
-    height: 100vh;
+    /* height: 100vh; */
     min-height: 100vh;
     width: 100vw;
-    color: #F7F8FD;
+    color: #F7F8FD !important;
+    padding: 0;
 }
 
 h1,
@@ -25,6 +26,10 @@ p {
 a {
     color: #F7F8FD;
     text-decoration: none !important;
+}
+
+.page-wrapper {
+    min-height: 80vh;
 }
 
 .login-button {
@@ -75,15 +80,19 @@ a {
     text-transform: uppercase;
 }
 
-.content-margin{
+.content-margin {
     margin: 10px 0;
 }
 
-.content-uber{
-    padding-bottom:20px;font-size: 18px;
+.content-uber {
+    padding-bottom: 20px;
+    font-size: 18px;
+    text-align: center;
 }
-.content-impact{
-    display: flex;flex-direction: column;
+
+.content-impact {
+    display: flex;
+    flex-direction: column;
 }
 
 .navbar {
@@ -95,25 +104,35 @@ a {
     margin-right: 0%;
 }
 
-.image-set{
-margin-top: 1em !important;margin: 10px;
+.image-set {
+    margin-top: 1em !important;
+    margin: 10px;
 }
-
 
 .container {
-    height:80%;
+    height: 80%;
 }
 
-.content-wrapper{
-    display: flex; flex-direction: row;justify-content: space-between; align-items: center;border-bottom: 1px solid #F7F8FD;padding: 1em;
+.content-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #F7F8FD;
+    padding: 1em;
 }
 
-.content-component{
-    display: flex; flex-direction: column; align-items: center;
+.content-component {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.content-body{
-    display: flex;flex-direction: row;justify-content: space-between; margin-bottom: 5px;
+.content-body {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 5px;
 }
 
 
@@ -136,8 +155,9 @@ margin-top: 1em !important;margin: 10px;
     width: 60px;
     display: block;
     margin: 0 auto;
-    position: sticky;
+    position: fixed;
     bottom: 10px;
+    left: 43vw;
 }
 
 @font-face {

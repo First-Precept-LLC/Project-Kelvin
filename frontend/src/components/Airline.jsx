@@ -3,7 +3,7 @@ import axios from "axios";
 import { Avatar, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@material-ui/core';
 import ReactDOM from "react-dom";
 
-export class convoConnector extends React.Component {
+export class airlineEstimate extends React.Component {
   constructor(props) {
     super(props);
     console.log(props);
@@ -12,12 +12,16 @@ export class convoConnector extends React.Component {
     this.nearConfig = props.nearConfig;
     this.wallet = props.wallet;
 
-    this.state = {};
+    this.state = {from: '',to:''};
+
 
     console.log(`constructor before trigger`);
 
     console.log(this.contract, this.currentUser, this.nearConfig, this.wallet);
   }
+
+
+
 
 
   async componentDidMount() {
@@ -26,6 +30,44 @@ export class convoConnector extends React.Component {
     if (this.wallet && this.contract)
       await this.triggerOAuth();
     // this.forceUpdate()
+  }
+
+  submitAirline = async (e) => {
+  console.log("before setting state ",this.state);
+  this.state.from = 'sfo';
+  this.state.to = 'jfk';
+        console.log("test 123",this.state);
+e.preventDefault();
+
+           // Sample climate api using carboninterface.com
+    const climateApiRoot = 'https://www.carboninterface.com/api/v1';
+    const climateApiToken = 'c87SduMH2ZQS7p3f8DAqKw'
+
+    axios.defaults.headers.common = {
+    "Authorization": "Bearer "+climateApiToken,
+      "Content-Type": "application/json"
+    }
+
+   
+    const authResponse = await axios.get(`${climateApiRoot}/auth`);
+     console.log(`auth Response from convo: ${JSON.stringify(authResponse.data)}`);
+    
+
+
+    // estimates 
+    const estimatesRequestPath = '/estimates';
+    const estimatesRequestBody = {
+        "type": "flight",
+        "passengers": 2,
+        "legs": [
+          {"departure_airport": this.state.from, "destination_airport": this.state.to},
+          {"departure_airport": this.state.to, "destination_airport": this.state.from}
+        ]
+    };
+    
+    const estimateResponse = await axios.post(`${climateApiRoot}${estimatesRequestPath}`, estimatesRequestBody);
+     console.log(`estimate Response from climate api: ${JSON.stringify(estimateResponse.data.data.attributes.carbon_lb)}`);
+
   }
 
   async shouldComponentUpdate() {
@@ -114,9 +156,9 @@ export class convoConnector extends React.Component {
   render() {
     console.log(`render start ${JSON.stringify(this.state.threads)}`);
     return (
+      <div className="base-container" ref={this.props.containerRef}>
 
-      <div className="base-container page-wrapper" ref={this.props.containerRef}>
-            <nav class="navbar navbar-light bg-light flow" >
+  <nav class="navbar navbar-light bg-light flow" >
         <div class="container">
             <a class="navbar-brand" href="#">
                 <img src="https://cdn.kulfyapp.com/kelvin/icons8-menu.png" alt="" width="28" height="19.6" />
@@ -129,52 +171,47 @@ export class convoConnector extends React.Component {
             </a>
         </div>
     </nav>
-      <ul class="nav nav-pills nav-fill mt-2 mx-2 ">
+    <ul class="nav nav-pills nav-fill mt-2 mx-2 ">
         <li class="nav-item">
-            <a class="nav-link active color-bg" aria-current="page" href="/flow">Impact Flow</a>
+            <a class="nav-link active color-bg" aria-current="page" href="/airline">Impact Flow</a>
         </li>
         <li class="nav-item">
             <a class="nav-link text-white" href="/convo">Impact Discussion</a>
         </li>
     </ul>
+    <div class="container flow-container" >
+        <h1 class="text-centers carbon-text" >Carbon Emission Analysis</h1>
+        <h6 class="mt-3 text-center">Transaction Type</h6>
 
 
-    <div class="container ">
-        <div class="discussions">
-            <div class="tread d-flex flex-row mt-3">
-                <img src="assets/images/dp.png" alt="" width="48" height="48" class="me-2"/>
-                <div class="context">
-                    <h6 class="username  color-text">
-                        @John1
-                    </h6>
-                    <p class="message">
-                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nesciunt ad totam debitis. Ratione molestiae voluptatem pariatur doloribus exercitationem nisi quae nihil! Officiis eaque doloribus, ab incidunt esse labore laborum? Consequatur.
-                    </p>
-                </div>
+        <div class="airline-container" >
+         
+            <div class="mb-2">
+                <input type="text"  value={this.state.from} onChange={this.handleFromChange}  placeholder="From" />
             </div>
-            <div class="tread d-flex flex-row mt-3">
-                <img src="assets/images/dp.png" alt="" width="48" height="48" class="me-2"/>
-                <div class="context">
-                    <h6 class="username color-text">
-                        @John2
-                    </h6>
-                    <p class="message">
-                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nesciunt ad totam debitis. Ratione molestiae voluptatem pariatur doloribus exercitationem nisi quae nihil! Officiis eaque doloribus, ab incidunt esse labore laborum? Consequatur.
-                    </p>
-                </div>
+            <div class="mb-2">
+                <input type="text"   value={this.state.to} onChange={this.handleToChange} placeholder="To" />
             </div>
-        </div>
-        <div class="send">
-            <input type="text" name="message" id="" value="" placeholder="Message"/>
-            <a href="# " class="send-btn "><img src="assets/images/send-btn.svg " alt=" " width="46 " height="47"/></a>
+            <select class="form-select mb-2 select-dropdown" aria-label="Default select example">
+                <option selected>Travel Class</option>
+                <option value="1">Business</option>
+                <option value="2">Economy</option>
+              </select>
         </div>
 
+
+        <div class="d-flex justify-content-center flex-column mt-5 options-list">
+            <a href="#" onClick={this.submitAirline.bind(this)} class="options-item">Submit</a>
+        </div>
+    
     </div>
-      </div>
+   
+</div>
+     
     )
   }
 }
 
-export default convoConnector;
+export default airlineEstimate;
 
 
