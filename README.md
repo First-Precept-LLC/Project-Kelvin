@@ -1,5 +1,5 @@
 # Project-Kelvin
-Project Kelvin is a financial system in alignment with the first precept of Buddhism.  Just like google pagerank caused people to optimize their content for search engines (SEO), we're working to **create new algorithms that cause people to optimize their actions for wisdom.** (WEO)
+Project Kelvin is a financial system in alignment with the first precept of Buddhism (refrain from taking life).  Just like google pagerank caused people to optimize their content for search engines (SEO), we're working to **create new algorithms that cause people to optimize their actions for wisdom.** (WEO)
 
 There are several parts to it. 
 
