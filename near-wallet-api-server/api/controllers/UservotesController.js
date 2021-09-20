@@ -10,7 +10,7 @@ const stampy_id = "stampy";
 
 
 
-const database_path = "mmongodb+srv://admin:jellynightfatherwheel@cluster0.7phke.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+const database_path = "mongodb+srv://admin:jellynightfatherwheel@cluster0.7phke.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
 let client = new MongoClient(database_path, { useNewUrlParser: true, useUnifiedTopology: true });//TODO: implement the database; modify queries to it accordingly.
 
@@ -20,6 +20,7 @@ const f = require('fs');
 
 const admin_usernames = []; //Either fill with admins, or remove
 
+const PAGE_SIZE = 5;
 
 
 
@@ -68,6 +69,7 @@ class Utilities {
     async init() {
         await client.connect();
         this.UserVotes = client.db("Kelvin").collection("uservotes");
+		this.Transactions = client.db("Kelvin").collection("transactions");
     }
 
     async clearVotes() {
@@ -121,6 +123,19 @@ class Utilities {
         };
         await this.UserVotes.insertOne(insertedObj);
     }
+	
+	async add_transaction(id, amount_sent, fromId, toId, desc) {
+		let insertedObj = {
+			transactionId: id,
+			amountSent: parseFloat(amount_sent),
+			from: fromId,
+			to: toId,
+			description: desc,
+			timestamp: new Date().getTime()
+		};
+		await this.Transactions.insertOne(insertedObj);
+		return true;
+	}
 
     async get_votes_by_user(userwallet){
         let allUserVotes = await this.UserVotes.find({user: userwallet}).toArray();
@@ -175,6 +190,11 @@ class Utilities {
         }
         return users;
     }
+	
+	async get_transaction_page(page_number) {
+		let offset = PAGE_SIZE * (page_number - 1);
+		return (await this.Transactions.aggregate([{$sort: {timestamp: -1}}, {$skip: offset}, {$limit: PAGE_SIZE}])).toArray();
+	}
 
 }
 
@@ -189,6 +209,7 @@ class StampsModule {
         this.gold_stamp_value = this.red_stamp_value * 5;
 		this.half_red_stamp_value = .5;
 		this.half_gold_stamp_value = 2.5;
+		this.zero_stamp_value = 0;
 		
         this.user_karma = 1.0;
     }
@@ -201,8 +222,8 @@ class StampsModule {
 
     reset_stamps() {
         console.log("WIPING STAMP RECORDS");
-        this.utils.clear_votes()
-        this.utils.update_vote(god_id, rob_id); //Generate start set IDs and replace these
+        this.utils.clearVotes()
+        this.utils.update_vote('alice', 'alice_name', 'bob', 'seed_transaction', 7); //Generate start set IDs and replace these
     }
 
     async update_vote(stamp_type, from_id, from_name, to_id, to_transaction, negative=false, recalculate=true){
@@ -253,17 +274,16 @@ class StampsModule {
         let users_matrix = Matrix.zeros(user_count, user_count);
 
         let votes = await this.utils.get_all_user_votes();
-        console.log(votes);
 
         for(let i = 0; i < votes.length; i++) {
-            let from_id = votes[i][0]; //This may change depending on the database implementation and what objects returned from the database look like
-            let to_id = votes[i][1];
-            let votes_for_user = votes[i][2];
+            let from_id = votes[i]['user']; //This may change depending on the database implementation and what objects returned from the database look like
+            let to_id = votes[i]['votedFor'];
+            let votes_for_user = votes[i]['votecount'];
             let from_id_index = this.utils.index[from_id];
             let toi = this.utils.index[to_id];
             let total_votes_by_user = await this.utils.get_votes_by_user(from_id);
             if (total_votes_by_user != 0) {
-                score = (this.user_karma * votes_for_user) / total_votes_by_user;
+                let score = (this.user_karma * votes_for_user) / total_votes_by_user;
                 users_matrix.set(toi, from_id_index, score); 
             }
 
@@ -320,6 +340,7 @@ class StampsModule {
         stamps = this.utils.scores[index] * this.total_votes;
         console.log(stamps);
         console.log(this.utils.scores[index]);
+		console.log(this.utils.scores);
         console.log(this.total_votes);
         return stamps;
     }
@@ -378,7 +399,7 @@ module.exports = {
 		await stamps.init();
 		
 		let resultData = [];
-		for (let i = 0; i < res.transactions.length; i++) {
+		for (let i = 0; i < req.query.transactions.length; i++) {
 			resultData.push(await stamps.utils.get_votes_by_transaction(req.query.transactions[i]));
 		}
 		return res.json({data: resultData});
@@ -387,15 +408,15 @@ module.exports = {
 	updateVote: async (req, res) => {
 		const stamps = new StampsModule();
 		await stamps.init();
-		const success = await stamps.update_vote(req.query.stampType, req.query.fromId, req.query.fromName, req.query.toId, req.query.toTransaction, req.query.negative); //req.query.negative is true in the case of a downvote, and false otherwise.
+		const success = await stamps.update_vote(req.query.stampType, req.query.fromId, req.query.fromName, req.query.toId, req.query.toTransaction); //req.query.negative is true in the case of a downvote, and false otherwise.
 	    return res.json({data: success});
 	},
 	
 	updateVoteForTransaction: async (req, res) => {
 		const stamps = new StampsModule();
 		await stamps.init();
-		const successSource = await stamps.update_vote(req.query.stampType, req.query.fromId, req.query.fromName, req.query.toIdSource, req.query.toTransaction, req.query.negative);
-	    const successDest = await stamps.update_vote(req.query.stampType, req.query.fromId, req.query.fromName, req.query.toIdDest, req.query.toTransaction, req.query.negative);
+		const successSource = await stamps.update_vote(req.query.stampType, req.query.fromId, req.query.fromName, req.query.toIdSource, req.query.toTransaction);
+	    const successDest = await stamps.update_vote(req.query.stampType, req.query.fromId, req.query.fromName, req.query.toIdDest, req.query.toTransaction);
 	    return res.json({data: successSource && successDest});
 	},
 	
@@ -404,8 +425,23 @@ module.exports = {
 		await stamps.init();
 		let resultData = await stamps.get_user_stamps(req.query.user);
 		return res.json({data: resultData});
-	}
+	},
 	
+	addNewTransaction: async (req, res) => {
+		const stamps = new StampsModule();
+		await stamps.init();
+		const successAdd = await stamps.utils.add_transaction(req.query.transactionId, req.query.amountSent, req.query.source, req.query.dest, req.query.description);
+		const successSource = await stamps.update_vote("zerostamp", "placeholder_user", "placeholder_name", req.query.source, req.query.transactionId, false);
+        const successDest = await stamps.update_vote("zerostamp", "placeholder_user", "placeholder_name", req.query.dest, req.query.transactionId, false);
+        return res.json({data: successAdd && successSource && successDest});		
+	},
+	
+	getTransactionPage: async (req, res) => {
+		const stamps = new StampsModule();
+		await stamps.init();
+		let resultData = await stamps.utils.get_transaction_page(req.query.pageNumber);
+		return res.json({data: resultData});
+	}
 
 };
 
