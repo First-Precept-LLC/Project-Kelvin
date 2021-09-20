@@ -1,0 +1,210 @@
+<input
+  data-behavior="transferFrom"
+  class="authenticated-accounts-input"
+  name="erc20"
+  type="hidden"
+/>
+<div class="authenticated-account" data-behavior="authenticatedAccount">
+  <label for="authEthereum">
+    <!-- filled in with CSS -->
+  </label>
+  <div class="authenticated-account__details">
+    <img
+      src="img/ethereum.svg"
+      alt=""
+      class="network-indicator network--ethereum"
+    />
+    <div data-behavior="ethAccountPlaceholder">Ethereum</div>
+    <button
+      type="button"
+      class="button-size--small"
+      id="authEthereum"
+      data-behavior="authEthereum"
+    >
+      Connect
+    </button>
+    <button
+      class="button-size--small button-variant--secondary"
+      data-behavior="disconnectEthereum"
+      style="display: none"
+      type="button"
+    >
+      Disconnect
+    </button>
+  </div>
+</div>
+<div class="authenticated-accounts-button">
+  <button type="button" class="button--swap" data-behavior="swapAccounts">
+    <span class="visually-hidden">swap</span>
+  </button>
+</div>
+<div class="authenticated-account" data-behavior="authenticatedAccount">
+  <label for="authNear">
+    <!-- filled in with CSS -->
+  </label>
+  <div class="authenticated-account__details">
+    <img src="/img/near.svg" alt="" class="network-indicator network--near" />
+    <div data-behavior="nearAccountPlaceholder">NEAR</div>
+    <button
+      type="button"
+      class="button-size--small"
+      id="authNear"
+      data-behavior="authNear"
+    >
+      Connect
+    </button>
+    <button
+      class="button-size--small button-variant--secondary"
+      data-behavior="disconnectNear"
+      style="display: none"
+      type="button"
+    >
+      Disconnect
+    </button>
+  </div>
+</div>
+
+<style>
+  .button--swap {
+    background-color: var(--white);
+    border-radius: 50px;
+    border: 1px solid var(--gray-200);
+    background-image: url("/img/swap-vert.svg");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 1.3em;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.04);
+    height: 2em;
+    width: 3.5em;
+    margin-top: 1.4em;
+  }
+
+  .network--ethereum {
+    color: #627eea;
+  }
+
+  .network--near {
+    color: var(--black);
+  }
+
+  .network-indicator {
+    margin-right: var(--spacing-s);
+  }
+
+  .connected-account {
+    display: block;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+    max-width: 124px;
+  }
+
+  /**
+ * Fill in labels with CSS to simplify swapping order with JS
+ */
+  .authenticated-accounts-input + .authenticated-account label:after {
+    content: "Transfer from";
+  }
+  .authenticated-accounts-button + .authenticated-account label:after {
+    content: "To";
+  }
+
+  .authenticated-account {
+    font-size: var(--fs-small);
+  }
+
+  .authenticated-account__details {
+    border: 1px solid var(--gray-200);
+    border-radius: var(--br-base);
+    padding: var(--spacing-m);
+    display: flex;
+    flex-direction: row;
+    height: 64px;
+    align-items: center;
+  }
+
+  .authenticated-account__details > div {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    margin-right: var(--spacing-l);
+    text-align: left;
+  }
+
+  .authenticated-account label {
+    margin-left: calc(1em + 1px);
+    text-align: left;
+  }
+</style>
+
+<script>
+  window.addEventListener("load", function addAuthenticatedAccountHandlers() {
+    // Parcel + PostHTML *could* extract these script tags to separate JS files and
+    // include each only once, but it does not yet. Since this "component" is
+    // included multiple times in the HTML of the page, this script tag will also
+    // get executed multiple times. But two swaps makes a no-op, so let's be careful
+    // to add the swap behavior only once.
+    if (!window.state.authenticatedAccountsInitialized) {
+      window.dom.onClick("swapAccounts", function swapAccountOrder({ target }) {
+        const from = target.closest("div").previousElementSibling;
+        const to = target.closest("div").nextElementSibling;
+        fromInner = from.innerHTML;
+        toInner = to.innerHTML;
+        from.innerHTML = toInner;
+        to.innerHTML = fromInner;
+
+        // Record current swap direction to be the same after NEAR wallet login redirect.
+        const settings = JSON.parse(window.localStorage.getItem("rainbow-bridge-settings"))
+        if (from.childNodes[3].childNodes[5].id === "authEthereum") {
+          window.localStorage.setItem("rainbow-bridge-settings", JSON.stringify({ ...settings, direction: "eth-to-near"}))
+          window.dom.findAll("transferFrom").forEach((input) => {
+            input.name = "erc20";
+          });
+        } else {
+          window.localStorage.setItem("rainbow-bridge-settings", JSON.stringify({ ...settings, direction: "near-to-eth"}))
+          window.dom.findAll("transferFrom").forEach((input) => {
+            input.name = "erc20n";
+          });
+        }
+      });
+      const swaps = window.dom.findAll("swapAccounts");
+      const settings = JSON.parse(window.localStorage.getItem("rainbow-bridge-settings"))
+      if (settings?.direction === "near-to-eth") {
+        swaps.map(swap => swap.click())
+      }
+
+      window.state.authenticatedAccountsInitialized = true;
+    }
+
+  });
+
+  window.renderers.push(() => {
+    if (window.ethInitialized) {
+      window.dom.hide("authEthereum");
+      window.dom.show("disconnectEthereum");
+      window.dom
+        .fill("ethAccountPlaceholder")
+        .with(
+          `<span class="connected-account" title="${window.ethUserAddress}">${window.ethUserAddress}</span>`
+        );
+    } else {
+      window.dom.show("authEthereum");
+      window.dom.hide("disconnectEthereum");
+    }
+    if (window.nearInitialized) {
+      window.dom.hide("authNear");
+      window.dom.show("disconnectNear");
+      window.dom
+        .fill("nearAccountPlaceholder")
+        .with(
+          `<span class="connected-account" title="${window.nearUserAddress}">${window.nearUserAddress}</span>`
+        );
+    } else {
+      window.dom.show("authNear");
+      window.dom.hide("disconnectNear");
+    }
+  });
+</script>

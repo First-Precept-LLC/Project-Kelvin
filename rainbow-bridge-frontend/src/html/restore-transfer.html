@@ -1,0 +1,370 @@
+<div class="restore" data-behavior="restore" style="display: none">
+  <div data-behavior="locateTransfer">
+    <header>
+      <h2>Restore single transfer</h2>
+      <p>
+        Restore a bridge transfer by providing it's initiating transaction ID
+        from NEAR or Ethereum.
+      </p>
+    </header>
+    <form method="get" class="restore-form" data-behavior="restoreForm">
+      <label for="txHashInput">Transaction hash</label>
+      <input
+        id="txHashInput"
+        data-behavior="txHashInput"
+        placeholder="0x89d24A6b4C.../4vcWEVTeg5C"
+        autocomplete="off"
+      />
+      <footer>
+        <button class="full-width" data-behavior="restoreSubmit" disabled>
+          Locate single transfer
+        </button>
+      </footer>
+    </form>
+    <header>
+      <h2>Scan transfer history</h2>
+      <p>
+        Scan transfer history from the following accounts (default to the connected accounts).
+      </p>
+    </header>
+    <form method="get" class="auto-sync-form" data-behavior="customAutoSyncForm">
+      <label for="ethAddrInput">Ethereum address</label>
+      <input id="ethAddrInput" data-behavior="ethAddrInput" placeholder="0x..." autocomplete="off"/>
+      <label for="nearAddrInput">NEAR account id</label>
+      <input id="nearAddrInput" data-behavior="nearAddrInput" placeholder="rainbow.near" autocomplete="off"/>
+      <div class="auto-sync-search" data-behavior="autoSyncMessage">
+        <span class="icon" style="display: none;" data-behavior="autoSyncSpinner"></span>
+      </div>
+        <button class="full-width" data-behavior="customAutoSyncSubmit">
+          Scan transfer history
+        </button>
+      <footer>
+        <button type="button" class="cancel" data-behavior="cancelRestore">
+          Cancel
+        </button>
+      </footer>
+    </form>
+  </div>
+  <div data-behavior="searchingTransfer" style="display: none">
+    <header>
+      <h2>Searching Transfer...</h2>
+    </header>
+  </div>
+  <div data-behavior="noTransferFound" style="display: none">
+    <header>
+      <h2>No transfer found</h2>
+      <p>
+        No bridge transfer could be recovered from this transaction hash.
+      </p>
+    </header>
+    <div>
+      <label for="txHashContainer">Transaction hash</label>
+      <div class="txHashContainer">
+        <p data-behavior="txHashNotFound"></p>
+      </div>
+    </div>
+    <footer>
+      <button class="full-width" data-behavior="cancelRestore">
+        Return to transfers
+      </button>
+      <button type="button" class="link button--missing-transfer full-width" data-behavior="newRecovery">
+        Try again
+      </button>
+    </footer>
+  </div>
+  <div data-behavior="transferFound" style="display: none">
+    <header>
+      <h2>Transfer found!</h2>
+      <p>
+        The following bridge transfer was found and is ready to be restored.
+      </p>
+    </header>
+    <div data-behavior="restoredTransferContainer"></div>
+    <footer>
+      <button class="full-width" data-behavior="confirmRestore">
+        Restore transfer
+      </button>
+      <button type="button" class="cancel" data-behavior="cancelRestore">
+        Cancel
+      </button>
+    </footer>
+  </div>
+</div>
+<style>
+  .restore {
+    max-width: 25em;
+    margin: 5rem auto 0;
+    padding: 1em;
+  }
+  .restore header {
+    text-align: center;
+    margin-bottom: 2em;
+  }
+  .restore .auto-sync-search {
+    text-align: center;
+  }
+  .restore input {
+    margin-top: 0.5em;
+    margin-bottom: 1em;
+  }
+  .restore-form {
+    margin-bottom: 7em;
+  }
+  .restoredTransfer.in-progress {
+    --color--transfer-header: var(--orange-300);
+    --color--transfer-amount: var(--orange-800);
+    --color--accounts-container: var(--orange-100);
+    --color--accounts-label: var(--orange-700);
+  }
+  .restoredTransfer.completed {
+    --color--transfer-header: var(--green-300);
+    --color--transfer-amount: var(--green-800);
+    --color--accounts-container: var(--green-100);
+    --color--accounts-label: var(--green-700);
+  }
+  .restoredTransfer.action-needed {
+    --color--transfer-header: var(--blue-300);
+    --color--transfer-amount: var(--blue-800);
+    --color--accounts-container: var(--blue-100);
+    --color--accounts-label: var(--blue-700);
+  }
+  .restoredTransfer.completed > header .transfer__status .icon {
+    background-image: url(img/completed.svg);
+  }
+  .restoredTransfer.action-needed > header .transfer__status .icon:before {
+    content: "→";
+  }
+  .restoredTransfer.in-progress > header .transfer__status .icon {
+    margin-right: 0.8em;
+    position: relative;
+    width: 0.8em;
+    height: 0.8em;
+  }
+  .restoredTransfer.in-progress > header .transfer__status .icon:before {
+    animation: spin 1.5s ease-in-out infinite;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    border-top-color: var(--color--transfer-status);
+    content: " ";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+  .restoredTransfer {
+    overflow: hidden;
+    margin: 1rem auto;
+    font-size: 0.75em;
+    border-radius: 10px;
+  }
+  .restoredTransfer header {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color--transfer-header);
+    padding: 0.6rem 1rem;
+    justify-content: flex-start;
+    margin-bottom: 0;
+    margin-top: 0;
+    text-align: left;
+  }
+  .restoredTransfer header h3 {
+    color: var(--color--transfer-amount);
+    padding-bottom: var(--spacing-s);
+  }
+  .restoredTransfer header span {
+    color: var(--color--accounts-label);
+  }
+  .restoredTransfer > div {
+    background-color: var(--color--accounts-container);
+    color: var(--color--accounts-label);
+    padding: 0.7rem 1rem;
+    display: grid;
+    grid-gap: 7rem;
+    grid-template-columns: auto auto;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .restoredTransfer > div > *:first-child {
+    color: var(--color--accounts-label);
+  }
+  .restoredTransfer .account-with-icon {
+    color: var(--color--accounts-label);
+  }
+  .txHashContainer {
+    background-color: var(--gray-200);
+    border-radius: var(--br-small);
+    overflow-wrap: break-word;
+    text-align: left;
+  }
+  .txHashContainer p {
+    padding: var(--spacing-s);
+  }
+</style>
+<script>
+  async function findTransfer (txHash) {
+    if (/^(0x)?[0-9a-f]{64}$/i.test(txHash)) {
+      try {
+        const transferToRestore = await window.nep141Xerc20.naturalErc20.recover(
+          txHash
+        )
+        if (transferToRestore) return transferToRestore
+      } catch (e) {console.log(e)}
+      try {
+        const transferToRestore = await window.ethXnear.bridgedNEAR.recover(
+          txHash
+        )
+        if (transferToRestore) return transferToRestore
+      } catch (e) {console.log(e)}
+      try {
+        const transferToRestore = await window.ethXnear.naturalETH.recover(
+          txHash
+        )
+        if (transferToRestore) return transferToRestore
+      } catch (e) {console.log(e)}
+    } else {
+      try {
+        transferToRestore = await window.nep141Xerc20.bridgedNep141.recover(
+          txHash
+        )
+        if (transferToRestore) return transferToRestore
+      } catch (e) {console.log(e)}
+      try {
+        transferToRestore = await window.ethXnear.naturalNEAR.recover(
+          txHash
+        )
+        if (transferToRestore) return transferToRestore
+      } catch (e) {console.log(e)}
+      try {
+        const transferToRestore = await window.ethXnear.bridgedETH.recover(
+          txHash
+        )
+        if (transferToRestore) return transferToRestore
+      } catch (e) {console.log(e)}
+    }
+    return null
+  }
+
+  window.addEventListener("load", function handleInputRestoreEvents() {
+    let transferToRestore;
+    const txHashInput = window.dom.find("txHashInput");
+    const restoreSubmit = window.dom.find("restoreSubmit");
+    txHashInput.onkeyup = function enableOrDisable(e) {
+      if (e.target.value.length > 0) restoreSubmit.disabled = false;
+      else restoreSubmit.disabled = true;
+    };
+    window.dom.find("restoreForm").onsubmit = async function restorefromHash(
+      e
+    ) {
+      e.preventDefault();
+      window.dom.hide("locateTransfer");
+      window.dom.show("searchingTransfer");
+      await new Promise(r => setTimeout(r, 1000));
+      // No easy way to determine the type of transaction without more information from
+      // the user or on-chain query, so try-catch to find a matching transfer.
+      transferToRestore = await findTransfer(txHashInput.value)
+      if (transferToRestore) {
+        console.log(transferToRestore);
+        txHashInput.value = "";
+        window.dom.hide("searchingTransfer");
+        window.dom.show("transferFound");
+        window.dom
+          .fill("restoredTransferContainer")
+          .with(
+            renderRestoredTransfer(transferToRestore)
+          );
+      } else {
+        console.error(e);
+        window.dom.hide("searchingTransfer");
+        window.dom.show("noTransferFound");
+        window.dom.fill("txHashNotFound").with(txHashInput.value)
+      }
+    };
+    window.dom.find(
+      "confirmRestore"
+    ).onclick = async function trackRestoredTransfer() {
+      window.transfers.track(transferToRestore);
+      window.urlParams.clear("new");
+      window.render();
+      window.dom.show("locateTransfer");
+      window.dom.hide("transferFound");
+    };
+    window.dom.findAll("cancelRestore").map(
+      (cancelBtn) =>
+        (cancelBtn.onclick = async function forgetFoundTransfer() {
+          const txHashInput = window.dom.find("txHashInput");
+          txHashInput.value = "";
+          restoreSubmit.disabled = true;
+          window.urlParams.clear("new");
+          window.render();
+          window.dom.show("locateTransfer");
+          window.dom.hide("transferFound");
+        })
+    );
+    window.dom.find("customAutoSyncForm").onsubmit = async function customAutoSyncTransfers (
+      e
+    ) {
+      e.preventDefault();
+      const customAutoSyncSubmit = window.dom.find("customAutoSyncSubmit")
+      const ethAddress = window.dom.find("ethAddrInput").value || null
+      const nearAccountId = window.dom.find("nearAddrInput").value || null
+      customAutoSyncSubmit.disabled = true
+      window.dom.show("autoSyncSpinner")
+      try {
+        await window.syncTransfers({ ethAddress, nearAccountId })
+      } catch (error) {
+        console.log(error)
+        alert(error)
+        return
+      } finally {
+        customAutoSyncSubmit.disabled = false
+        window.dom.hide("autoSyncSpinner")
+      }
+      window.urlParams.clear("new");
+      window.render();
+    }
+  });
+  function renderRestoredTransfer(transfer) {
+    transfer = window.transfers.decorate(transfer, { locale: "en_US" });
+    return `
+    <div class="restoredTransfer ${transfer.status}">
+      <header>
+        <h3>${window.utils.formatLargeNum(
+          transfer.amount,
+          transfer.decimals
+        )} ${transfer.sourceTokenName}</h3>
+        <div class="transfer__status">
+          <span class="icon"></span>
+          <span>${transfer.statusMessage}</span>
+        </div>
+      </header>
+      <div>
+        <span>From</span>
+        <span class="account-with-icon ${transfer.sourceNetwork}" title="${
+      transfer.sender
+    }">
+          ${transfer.sender}
+        </span>
+      </div>
+      <div>
+        <span>To</span>
+        <span class="account-with-icon ${transfer.destinationNetwork}" title="${
+      transfer.recipient
+    }">
+          ${transfer.recipient}
+        </span>
+      </div>
+    </div>
+  `;
+  }
+  function renderRestoreForm () {
+    if (!(window.ethInitialized && window.nearInitialized)) return
+
+    if (window.urlParams.get('new') === 'restore') {
+      window.dom.show('restore')
+    } else {
+      window.dom.hide('restore')
+    }
+  }
+  window.renderers.push(renderRestoreForm);
+</script>

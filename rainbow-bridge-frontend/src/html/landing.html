@@ -1,0 +1,127 @@
+<div class="landing" data-behavior="landing">
+  <h1 class="logo--landing-page">
+    <img class="rainbow-icon" src="/img/rainbow-bridge.svg" />
+    <small>
+      <span class="logo--landing-page-near">NEAR</span>
+      <img
+        alt="to and from"
+        src="img/swap-lr.svg"
+        style="display: inline; vertical-align: bottom"
+      />
+      <span class="logo--landing-page-ethereum">ETHEREUM</span>
+    </small>
+    <div class="logo-text--primary">
+      Rainbow Bridge
+      <span class="beta-tag">Beta</span>
+    </div>
+  </h1>
+  <div class="content-wrapper">
+    <p class="landing-blurb">
+      Transfer tokens between Ethereum and NEAR! Connect a NEAR and Ethereum
+      account to get started.
+    </p>
+    <form method="get" class="panel">
+      <include src="authenticated-accounts.html"></include>
+      <div class="cta-container">
+        <button data-behavior="landingSubmit" class="full-width">
+          Begin new transfer
+        </button>
+        <button
+          type="button"
+          class="link button--missing-transfer"
+          data-behavior="showAutoSyncTransfersModal"
+          style="display: none;"
+        >
+          Scan my transfer history
+        </button>
+      </div>
+    </form>
+    <p class="create-account">
+      Need a NEAR account? Create one
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href="https://faucet.paras.id/"
+        >here</a
+      >.
+    </p>
+  </div>
+</div>
+<style>
+  .landing {
+    margin-bottom: 140px;
+  }
+
+  .landing-blurb {
+    padding: 0 var(--spacing-xl);
+  }
+
+  .panel {
+    background-color: var(--white);
+    border-radius: 1em;
+    box-shadow: 0px 51px 121px rgba(0, 0, 0, 0.05),
+      0px 21.3066px 50.5509px rgba(0, 0, 0, 0.0359427),
+      0px 11.3915px 27.0269px rgba(0, 0, 0, 0.0298054),
+      0px 6.38599px 15.1511px rgba(0, 0, 0, 0.025),
+      0px 3.39155px 8.04662px rgba(0, 0, 0, 0.0201946),
+      0px 1.4113px 3.34838px rgba(0, 0, 0, 0.0140573);
+    margin: 80px var(--spacing-m);
+    margin-bottom: var(--spacing-l);
+    padding: var(--spacing-m);
+  }
+  .create-account {
+    font-size: var(--fs-small);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--br-base);
+    padding: var(--spacing-m);
+    margin: 0 var(--spacing-m);
+  }
+  @media (min-width: 928px) {
+    .landing {
+      background: url(img/landing-bg-left.svg) no-repeat,
+        url(img/landing-bg-right.svg) no-repeat;
+      background-position: top 22em left calc(50% - 22em),
+        top 31em right calc(50% - 21em);
+    }
+
+    .panel {
+      margin: 80px auto;
+      margin-bottom: var(--spacing-l);
+    }
+    .create-account {
+      margin: 0;
+    }
+  }
+  .cta-container {
+    margin-top: var(--spacing-xxl);
+  }
+  .cta-container .button--missing-transfer {
+    font-size: var(--fs-body);
+    font-weight: var(--fw-regular);
+    margin-top: 0.5em;
+  }
+</style>
+<script>
+  async function renderLanding() {
+    if (window.ethInitialized && window.nearInitialized) {
+      window.dom.find("landingSubmit").disabled = false;
+      window.dom.show('showAutoSyncTransfersModal')
+    } else {
+      // window.dom.show("landing");
+      window.dom.hide('showAutoSyncTransfersModal')
+      window.dom.find("landingSubmit").disabled = true;
+      return;
+    }
+
+    const transfers = await window.transfers.get();
+    const params = Object.keys(window.urlParams.get());
+
+    if (transfers.length || ['erc20', 'erc20n', 'new'].some(p => params.includes(p))) {
+      window.dom.hide("landing");
+    } else {
+      window.dom.show("landing");
+    }
+  }
+
+  window.renderers.push(renderLanding);
+</script>

@@ -1,0 +1,414 @@
+@import "./a11y.css";
+@import "./modal.css";
+@import "./title.css";
+@import "./transfer-form.css";
+
+:root {
+  /* Typographic Scale */
+  --base-font-size: 16px;
+  --fs-heading-1: 1.9375rem;
+  --fs-heading-2: 1.5625rem;
+  --fs-heading-3: 1.25rem;
+  --fs-heading-4: var(--base-font-size);
+  --fs-body: var(--base-font-size);
+  --fs-small: 0.875rem;
+  --fs-micro: 0.75rem;
+
+  /* Font Family */
+  --sans: Inter, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+    Helvetica, Arial, sans-serif;
+  --monospace: "Source Code Pro", monospace;
+
+  /* Font Weights */
+  --fw-regular: 400;
+  --fw-bold: 600;
+  --fw-black: 900;
+
+  /* Line Heights */
+  --lh-headings: 1.3;
+  --lh-copy: 1.5;
+
+  /* Spacing Scale */
+  --base-spacing: 0.5rem;
+  --spacing-xs: calc(var(--base-spacing) / 2);
+  --spacing-s: var(--base-spacing);
+  --spacing-m: calc(var(--base-spacing) * 2);
+  --spacing-l: calc(var(--base-spacing) * 3);
+  --spacing-xl: calc(var(--base-spacing) * 4);
+  --spacing-xxl: calc(var(--base-spacing) * 5);
+
+  /* Sizes */
+  --header-height: 80px;
+  --input-height: 48px;
+  --input-height--small: 40px;
+
+  /* Border Radius */
+  --br-base: var(--base-spacing);
+  --br-small: 0.375rem;
+
+  /* Colors */
+  --white: white;
+  --black: #111618;
+
+  --gray-100: #fafafa;
+  --gray-200: #f0f0f1;
+  --gray-300: #e5e5e6;
+  --gray-400: #d5d4d8;
+  --gray-500: #a2a2a8;
+  --gray-600: #72727a;
+  --gray-700: #3f4045;
+  --gray-800: #272729;
+
+  --red-100: #fef2f2;
+  --red-200: #ffdedf;
+  --red-300: #ffbdbe;
+  --red-400: #ff8588;
+  --red-500: #fc5b5b;
+  --red-600: #dc1f25;
+  --red-700: #a00005;
+  --red-800: #450002;
+
+  --orange-100: #fff6ed;
+  --orange-200: #ffecd6;
+  --orange-300: #ffdbb2;
+  --orange-400: #ffc785;
+  --orange-500: #ffb259;
+  --orange-600: #e78513;
+  --orange-700: #995200;
+  --orange-800: #452500;
+
+  --green-100: #ecfdf5;
+  --green-200: #c8f6e0;
+  --green-300: #90e9c5;
+  --green-400: #4dd5a6;
+  --green-500: #00c08b;
+  --green-600: #008d6a;
+  --green-700: #005a46;
+  --green-800: #00261c;
+
+  --blue-100: #f0f9ff;
+  --blue-200: #d6edff;
+  --blue-300: #8fcdff;
+  --blue-400: #2b9af4;
+  --blue-500: #0072ce;
+  --blue-600: #005497;
+  --blue-700: #003560;
+  --blue-800: #001729;
+
+  --aurora-green: #70D44B;
+  --ethereum-blue: #5773e2;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+html {
+  font-family: var(--sans);
+  font-variant: slashed-zero;
+  font-size: var(--base-font-size);
+  font-weight: var(--fw-regular);
+}
+
+body {
+  margin: 0;
+  padding-top: var(--header-height);
+}
+
+.content-wrapper {
+  max-width: 440px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: var(--fw-black);
+  color: var(--black);
+  margin: 0;
+}
+
+img,
+picture {
+  display: block;
+}
+
+a,
+.link {
+  color: var(--blue-500);
+  text-decoration: none;
+  padding: 0;
+}
+a:hover,
+a:focus,
+.link:hover,
+.link:focus {
+  text-decoration: underline;
+}
+a:active,
+.link:active {
+  color: var(--blue-400);
+}
+
+p {
+  color: var(--gray-600);
+  line-height: 1.5;
+}
+
+strong {
+  font-weight: var(--fw-bold);
+}
+
+label {
+  display: block;
+  font-size: var(--fs-micro);
+  color: var(--gray-500);
+  margin-bottom: var(--base-spacing);
+}
+
+button,
+input,
+select {
+  font: inherit;
+  outline: none;
+}
+
+button {
+  background-color: var(--black);
+  border-radius: var(--br-base);
+  border: none;
+  color: var(--white);
+  font-weight: var(--fw-bold);
+  height: var(--input-height);
+  line-height: var(--input-height);
+  padding-left: var(--spacing-m);
+  padding-right: var(--spacing-m);
+  cursor: pointer;
+}
+
+button.button-variant--secondary {
+  background-color: var(--gray-200);
+  color: var(--black);
+}
+
+button.button-size--small {
+  border-radius: var(--br-small);
+  height: 40px;
+  padding-left: var(--spacing-m);
+  padding-right: var(--spacing-m);
+  line-height: 40px;
+  font-size: var(--fs-micro);
+}
+
+button.full-width {
+  width: 100%;
+}
+
+button:hover,
+button:focus {
+  box-shadow: 0 0 10em rgba(255, 255, 255, 0.2) inset;
+}
+button:active {
+  box-shadow: 0 0 10em rgba(0, 0, 0, 0.1) inset;
+}
+button.link {
+  background: none;
+  box-shadow: none;
+  display: inline;
+}
+button.cta {
+  border-radius: 0.5em;
+  padding: 0.75em;
+  width: 100%;
+}
+button.cancel {
+  background: none;
+  box-shadow: none;
+  color: var(--red-500);
+  padding: 0.75em;
+  width: 100%;
+}
+button.cancel:hover,
+button.cancel:focus {
+  text-decoration: underline;
+}
+[disabled] button,
+button[disabled] {
+  box-shadow: none;
+  background-color: var(--gray-300);
+  color: var(--gray-500);
+  cursor: not-allowed;
+  transform: none;
+}
+[disabled] .cancel,
+.cancel[disabled] {
+  color: gray;
+  cursor: not-allowed;
+  background: none;
+  box-shadow: none;
+}
+
+fieldset {
+  border: none;
+  padding: 0;
+}
+
+input,
+select {
+  background-color: var(--white);
+  border: 2px solid var(--gray-300);
+  border-radius: 0.5em;
+  color: var(--gray-700);
+  padding: 0 var(--spacing-m);
+  height: var(--input-height);
+  width: 100%;
+}
+
+input.error,
+select.error {
+  border-color: var(--red-500);
+}
+
+.errorMessage {
+  color: var(--red-600);
+  font-size: var(--fs-micro);
+  line-height: var(--lh-copy);
+  margin-top: var(--spacing-s);
+}
+input::selection {
+  background-color: var(--blue-400);
+  color: var(--white);
+}
+
+input:hover {
+  background-color: var(--gray-100);
+}
+
+input:focus,
+input:active {
+  color: var(--gray-700);
+  border-color: var(--blue-400);
+}
+
+code {
+  box-shadow: 0 0 3px var(--light-gray) inset;
+  border-radius: 5px;
+  color: var(--gray-600);
+  padding: 0 0.25em;
+}
+
+li {
+  padding-bottom: 1em;
+}
+
+::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: var(--gray-600);
+  opacity: 0.5; /* Firefox */
+}
+
+.space-between {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.container {
+  width: 100%;
+  max-width: 33em;
+  margin: 0 auto;
+  text-align: center;
+  padding: 1em;
+}
+
+.beta-tag {
+  color: var(--blue-500);
+  border: 1px solid var(--blue-500);
+  border-radius: 4px;
+  padding: 2px 4px;
+  font-size: var(--fs-micro);
+  font-weight: var(--fw-regular);
+}
+
+.concept-ethereum {
+  color: var(--purple);
+}
+
+.account-tag {
+  background-color: var(--gray-200);
+  border-radius: 1000em;
+  height: var(--spacing-l);
+  line-height: var(--spacing-l);
+  vertical-align: middle;
+  padding-left: var(--spacing-m);
+}
+
+.account-tag.account-with-icon {
+  height: var(--spacing-xl);
+  line-height: var(--spacing-xl);
+}
+
+.account-tag.account-with-icon::after {
+  top: 4px;
+  right: 4px;
+}
+
+.account-tag:before {
+  font-size: 0.8em;
+}
+
+.account-with-icon {
+  height: var(--spacing-l);
+  line-height: var(--spacing-l);
+  color: var(--gray-700);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  position: relative;
+  padding-right: var(--spacing-xxl) !important;
+  max-width: 180px;
+}
+
+.account-with-icon:after {
+  background-repeat: no-repeat;
+  background-size: var(--spacing-l) var(--spacing-l);
+  background-position: center;
+  display: block;
+  overflow: hidden;
+  text-indent: -10em;
+  width: var(--spacing-l);
+  height: var(--spacing-l);
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.account-with-icon.reverse {
+  line-height: var(--spacing-l);
+  height: var(--spacing-l);
+  padding-right: unset;
+  padding-left: var(--spacing-xl) !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.account-with-icon.reverse:after {
+  left: 0;
+  right: unset;
+}
+.account-with-icon.ethereum:after {
+  content: "on Ethereum";
+  background-image: url(/img/ethereum.svg);
+}
+.account-with-icon.near:after {
+  content: "on NEAR";
+  background-image: url(/img/near.svg);
+}
