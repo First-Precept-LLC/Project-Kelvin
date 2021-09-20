@@ -23,6 +23,14 @@ input {
     color: #535164 !important;
 }
 
+.analyse-impact {
+    max-width: 145px;
+}
+
+.word-break {
+    word-break: break-all;
+}
+
 .options-list {}
 
 .options-item {
@@ -90,10 +98,12 @@ input {
 }
 
 .send {
-    position: fixed;
+    position: absolute;
     bottom: 5px;
     display: flex;
-    width: 72%;
+    width: 100%;
+    left: 0;
+    padding: 0 2em;
 }
 
 .send>input {
@@ -105,9 +115,10 @@ input {
     flex-direction: column-reverse !important;
     justify-content: end;
     height: 80vh;
-    padding-bottom: 60px;
+    /* padding-bottom: 60px; */
     padding-top: 50px;
     overflow: auto;
+    padding-bottom: 50px;
 }
 
 .flow {

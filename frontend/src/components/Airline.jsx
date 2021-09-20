@@ -113,12 +113,9 @@ e.preventDefault();
 
         <div class="airline-container" >
          
-            <div class="mb-2">
-                <input type="text" name="from" onChange={e => this.setState({ from: e.target.value })}   placeholder="From" />
-            </div>
-            <div class="mb-2">
-                <input type="text"  name="to" onChange={e => this.setState({ to: e.target.value })} placeholder="To" />
-            </div>
+            
+            <input class="mb-2" type="text" name="from" onChange={e => this.setState({ from: e.target.value })}   placeholder="From" />
+            <input class="mb-2" type="text"  name="to" onChange={e => this.setState({ to: e.target.value })} placeholder="To" />
             <select class="form-select mb-2 select-dropdown" aria-label="Default select example">
                 <option selected>Round Trip</option>
                 <option value="1">One Way</option>

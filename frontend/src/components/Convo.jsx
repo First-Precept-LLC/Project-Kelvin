@@ -191,26 +191,30 @@ export class convoConnector extends React.Component {
 
 <div className="base-container" ref={this.props.containerRef}>
 
-        <div class="container ">
+      <div class="container ">
         <div class="discussions">
-        <div className="content">
-          <List id="threads-list">
+            <div className="content">
+              <List id="threads-list">
 
-           
-           
+              
+              
 
- no threads yet...
+              no threads yet...
 
 
 
-          </List>
+              </List>
+            </div>
+            
         </div>
-   <div class="send">
-            <input type="text" name="message" onChange={e => this.setState({ message: e.target.value })}   placeholder="Message"/>
-            <a href="# " onClick={this.submitMessage.bind(this)} class="send-btn "><img src="https://cdn.kulfyapp.com/kelvin/send-btn.svg " alt=" " width="46 " height="47"/></a>
-        </div>
-        </div></div>
+        <div className="row">
+              <div class="send">
+                        <input type="text" name="message" onChange={e => this.setState({ message: e.target.value })}   placeholder="Message"/>
+                        <a href="# " onClick={this.submitMessage.bind(this)} class="send-btn "><img src="https://cdn.kulfyapp.com/kelvin/send-btn.svg " alt=" " width="46 " height="47"/></a>
+                </div>
+            </div>
       </div>
+    </div>
 
     <div class="container ">
     </div>
