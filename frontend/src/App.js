@@ -2,9 +2,7 @@ import 'regenerator-runtime/runtime';
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Big from 'big.js';
-import Form from './components/Form';
 import SignIn from './components/SignIn';
-import SignUp from './components/SignUp';
 import Convo from './components/Convo';
 import Flow from './components/Flow';
 import Airline from './components/Airline';
@@ -12,7 +10,7 @@ import Impact from './components/Impact';
 import AddImpact from './components/AddImpact';
 import AddImpactType from './components/AddImpactType';
 import Transactions from './components/Transactions';
-import Messages from './components/Messages';
+import Header from './components/Header';
 import {
   BrowserRouter as Router,
   Switch,
@@ -110,7 +108,11 @@ const App = ({ contract, currentUser, nearConfig, wallet }) => {
 
       
 <Route exact path="/">
-  {currentUser ? <Redirect to="/transactions" /> : <SignIn />}
+  {currentUser ? <Redirect to="/transactions" /> : <Redirect to="/signin" />}
+</Route>
+
+<Route exact path="/signin">
+  {currentUser ? <Redirect to="/transactions" /> : <Redirect to="/signin" />}
 </Route>
   
 

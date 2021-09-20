@@ -6,6 +6,7 @@ body {
     width: 100vw;
     color: #F7F8FD !important;
     padding: 0;
+    margin: 0 auto !important;
 }
 
 h1,
@@ -174,6 +175,7 @@ a {
     padding: 15px 20px;
     border-radius: 30px;
     font-size: 12px;
+    white-space: pre;
 }
 
 .btn-big {

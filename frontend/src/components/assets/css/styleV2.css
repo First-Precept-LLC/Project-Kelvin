@@ -10,6 +10,19 @@
     color: #535164 !important;
 }
 
+.no-borer {
+    border: none !important;
+}
+
+#dropdownMenuButton1 {
+    background: #535164 !important;
+    border: none !important;
+}
+
+input {
+    color: #535164 !important;
+}
+
 .options-list {}
 
 .options-item {
@@ -79,6 +92,12 @@
 .send {
     position: fixed;
     bottom: 5px;
+    display: flex;
+    width: 72%;
+}
+
+.send>input {
+    margin-right: 10px;
 }
 
 .discussions {
@@ -87,6 +106,8 @@
     justify-content: end;
     height: 80vh;
     padding-bottom: 60px;
+    padding-top: 50px;
+    overflow: auto;
 }
 
 .flow {
