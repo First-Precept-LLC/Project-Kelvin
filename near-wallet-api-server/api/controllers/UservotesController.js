@@ -70,10 +70,12 @@ class Utilities {
         await client.connect();
         this.UserVotes = client.db("Kelvin").collection("uservotes");
 		this.Transactions = client.db("Kelvin").collection("transactions");
+		this.RegenVotes = client.db("Kelvin").collection("regenvotes");
     }
 
     async clearVotes() {
         await this.UserVotes.deleteMany({});
+		await this.RegenVotes.deleteMany({});
     }
 
     update_ids_list() {
@@ -105,15 +107,24 @@ class Utilities {
         return null;
     }
 
-    get_user_score(user) {
+    get_user_score(user, collection) {
         let userIndex = this.index_dammit(user);
         if (userIndex) {
+			if (collection == "regen") {
+				return this.regenscores[index];
+			}
             return this.scores[index];
         }
         return 0.0;
     }
     //A series of databse functions follow. Modify based on db implementation.
-    async update_vote(userwallet, user_name, voted_for, voted_for_transaction, vote_quantity) {
+    async update_vote(userwallet, user_name, voted_for, voted_for_transaction, vote_quantity, collection) {
+		let targetTable = null;
+		if(collection == "regen") {
+			targetTable = this.RegenVotes;
+		} else {
+			targetTable = this.UserVotes;
+		}
         let insertedObj = {
             user: userwallet,
             sourceName: user_name,
@@ -121,8 +132,9 @@ class Utilities {
             targetTransaction: voted_for_transaction,
             votecount: vote_quantity 
         };
-        await this.UserVotes.insertOne(insertedObj);
+        await targetTable.insertOne(insertedObj);
     }
+	
 	
 	async add_transaction(id, amount_sent, fromId, toId, desc) {
 		let insertedObj = {
@@ -137,8 +149,14 @@ class Utilities {
 		return true;
 	}
 
-    async get_votes_by_user(userwallet){
-        let allUserVotes = await this.UserVotes.find({user: userwallet}).toArray();
+    async get_votes_by_user(userwallet, collection){
+		let targetTable = null;
+		if(collection == "regen") {
+			targetTable = this.RegenVotes;
+		} else {
+			targetTable = this.UserVotes;
+		}
+        let allUserVotes = await targetTable.find({user: userwallet}).toArray();
         let total = 0;
         for (let i = 0; i < allUserVotes.length; i++) {
             total += allUserVotes[i].votecount;
@@ -146,8 +164,14 @@ class Utilities {
         return total;
     }
 
-    async get_votes_for_user(userwallet){
-        let allUserVotes = await this.UserVotes.find({votedFor: userwallet}).toArray();
+    async get_votes_for_user(userwallet, collection){
+		let targetTable = null;
+		if(collection == "regen") {
+			targetTable = this.RegenVotes;
+		} else {
+			targetTable = this.UserVotes;
+		}
+        let allUserVotes = await targetTable.find({votedFor: userwallet}).toArray();
         let total = 0;
         for (let i = 0; i < allUserVotes.length; i++) {
             total += allUserVotes[i].votecount;
@@ -155,8 +179,14 @@ class Utilities {
         return total;
     }
 
-    async get_votes_by_transaction(transaction){
-        let allUserVotes = await this.UserVotes.find({targetTransaction: transaction}).toArray();
+    async get_votes_by_transaction(transaction, collection){
+		let targetTable = null;
+		if(collection == "regen") {
+			targetTable = this.RegenVotes;
+		} else {
+			targetTable = this.UserVotes;
+		}
+        let allUserVotes = await targetTable.find({targetTransaction: transaction}).toArray();
         let total = 0;
         for (let i = 0; i < allUserVotes.length; i++) {
             total += allUserVotes[i].votecount;
@@ -164,8 +194,14 @@ class Utilities {
         return total;
     }
 
-    async get_total_votes(){
-        let allUserVotes = await this.UserVotes.find({}).toArray();
+    async get_total_votes(collection){
+		let targetTable = null;
+		if(collection == "regen") {
+			targetTable = this.RegenVotes;
+		} else {
+			targetTable = this.UserVotes;
+		}
+        let allUserVotes = await targetTable.find({}).toArray();
         let total = 0;
         for (let i = 0; i < allUserVotes.length; i++) {
             total += allUserVotes[i].votecount;
@@ -173,13 +209,25 @@ class Utilities {
         return total;
     }
 
-    async get_all_user_votes(){
-        return await this.UserVotes.find({}).toArray();
+    async get_all_user_votes(collection){
+		let targetTable = null;
+		if(collection == "regen") {
+			targetTable = this.RegenVotes;
+		} else {
+			targetTable = this.UserVotes;
+		}
+        return await targetTable.find({}).toArray();
     }
 
-    async get_users() {
+    async get_users(collection) {
+		let targetTable = null;
+		if(collection == "regen") {
+			targetTable = this.RegenVotes;
+		} else {
+			targetTable = this.UserVotes;
+		}
         let users = [];
-        let allUserVotes = await this.UserVotes.find({}).toArray();
+        let allUserVotes = await targetTable.find({}).toArray();
         for (let i = 0; i < allUserVotes.length; i++) {
             if(! users.includes(allUserVotes[i].user)) {
                 users.push(allUserVotes[i].user);
@@ -216,17 +264,20 @@ class StampsModule {
 
     async init() {
         await this.utils.init()
-        this.total_votes = await this.utils.get_total_votes();
-        await this.calculate_stamps(); 
+        this.total_votes = await this.utils.get_total_votes("uservotes");
+		this.total_regen_votes = await this.utils.get_total_votes("regen");
+        await this.calculate_stamps("uservotes");
+        await this.calculate_stamps("regen");		
     }
 
     reset_stamps() {
         console.log("WIPING STAMP RECORDS");
         this.utils.clearVotes()
-        this.utils.update_vote('alice', 'alice_name', 'bob', 'seed_transaction', 7); //Generate start set IDs and replace these
+        this.utils.update_vote('alice', 'alice_name', 'bob', 'seed_transaction', 7, "uservotes"); //Generate start set IDs and replace these
+		this.utils.update_vote('alphonse', 'alphonse_name', 'barry', 'seed_transaction', 7, "regen"); //Generate start set IDs and replace these
     }
 
-    async update_vote(stamp_type, from_id, from_name, to_id, to_transaction, negative=false, recalculate=true){
+    async update_vote(stamp_type, from_id, from_name, to_id, to_transaction, collection, negative=false, recalculate=true){
         if (to_id == stampy_id) {
             //votes for stampy do nothing
             return false;
@@ -253,16 +304,16 @@ class StampsModule {
         }
 
         this.total_votes += vote_strength;
-        await this.utils.update_vote(from_id, from_name, to_id, to_transaction, vote_strength);
+        await this.utils.update_vote(from_id, from_name, to_id, to_transaction, vote_strength, collection);
         this.utils.users = await this.utils.get_users();
         this.utils.update_ids_list();
         if (recalculate) {
-            this.calculate_stamps();
+            this.calculate_stamps(collection);
         }
         return true;
     }
 
-    async calculate_stamps() {
+    async calculate_stamps(collection) {
         //set up and solve the system of linear equations
         console.log("RECALCULATING STAMP SCORES");
 
@@ -273,7 +324,7 @@ class StampsModule {
 
         let users_matrix = Matrix.zeros(user_count, user_count);
 
-        let votes = await this.utils.get_all_user_votes();
+        let votes = await this.utils.get_all_user_votes(collection);
 
         for(let i = 0; i < votes.length; i++) {
             let from_id = votes[i]['user']; //This may change depending on the database implementation and what objects returned from the database look like
@@ -281,7 +332,7 @@ class StampsModule {
             let votes_for_user = votes[i]['votecount'];
             let from_id_index = this.utils.index[from_id];
             let toi = this.utils.index[to_id];
-            let total_votes_by_user = await this.utils.get_votes_by_user(from_id);
+            let total_votes_by_user = await this.utils.get_votes_by_user(from_id, collection);
             if (total_votes_by_user != 0) {
                 let score = (this.user_karma * votes_for_user) / total_votes_by_user;
                 users_matrix.set(toi, from_id_index, score); 
@@ -297,32 +348,39 @@ class StampsModule {
 
         let user_count_matrix = Matrix.zeros(user_count, 1);
         user_count_matrix.set(0, 0, 1.0); //God has 1 karma
-
-        this.utils.scores = solve(users_matrix, user_count_matrix).to1DArray();
-
-        this.print_all_scores();
+		
+		console.log(users_matrix);
+		
+		if (collection == "regen") {
+			this.utils.regenscores = solve(users_matrix, user_count_matrix).to1DArray();
+		    console.log(this.utils.regenscores);
+		} else {
+	        this.utils.scores = solve(users_matrix, user_count_matrix).to1DArray();
+		    console.log(this.utils.scores);		
+		}
+        this.print_all_scores(collection);
         //done
     }
 
-    async get_user_scores() {
+    async get_user_scores(collection) {
         const message = "Here are the users and how many stamps they're worth:\n";
         this.utils.users = await this.utils.get_users();
         for (let i = 0; i < this.utils.users.length; i++) {
             let user_id = this.utils.users[i];
             let name = "<@" + String(user_id) + ">"; //Format as necessary
-            let stamps = this.get_user_stamps(user_id);
+            let stamps = this.get_user_stamps(user_id, collection);
             message += name + ": \t" + String(stamps) + "\n";
         }
         return message;
     }
 
-    async print_all_scores() {
+    async print_all_scores(collection) {
         let total_stamps = 0;
         this.utils.users = await this.utils.get_users();
         for (let i = 0; i < this.utils.users.length; i++) {
             let user_id = this.utils.users[i];
             let name = "<@" + String(user_id) + ">"; //Format as necessary
-            let stamps = this.get_user_stamps(user_id);
+            let stamps = this.get_user_stamps(user_id, collection);
             total_stamps += stamps;
             console.log(name + "\t" + String(stamps));
         }
@@ -330,22 +388,32 @@ class StampsModule {
         console.log("Total stamps:" + String(total_stamps));
     }
 
-    get_user_stamps(user) {
+    get_user_stamps(user, collection) {
 		if (!user) {
 			return 0;
 		}
         let index = this.utils.index_dammit(user);
         console.log("get_user_stamps for " + String(user)+ ", index=" + String(index));
         let stamps = 0.0; //Maybe readd nonzero predicate when seed users are figured out?
-        stamps = this.utils.scores[index] * this.total_votes;
+		if (collection == "regen") {
+	        stamps = this.utils.regenscores[index] * this.total_regen_votes;
+		} else {
+			stamps = this.utils.scores[index] * this.total_votes;
+		}
         console.log(stamps);
-        console.log(this.utils.scores[index]);
-		console.log(this.utils.scores);
-        console.log(this.total_votes);
+		if (collection == regen) {
+			console.log(this.utils.regenscores[index]);
+		    console.log(this.utils.regenscores);
+            console.log(this.total_regen_votes);
+		} else {
+			console.log(this.utils.scores[index]);
+		    console.log(this.utils.scores);
+            console.log(this.total_votes);
+		}
         return stamps;
     }
 
-    load_votes_from_csv(filename="stamps.csv") {
+    load_votes_from_csv(collection, filename="stamps.csv") {
         let rl = readLine.createInterface({
             input : f.createReadStream(file),
             output : process.stdout,
@@ -361,10 +429,10 @@ class StampsModule {
                 let react_type = line_contents[1];
                 let from_id = line_contents[2];
                 let to_id = line_contents[3];
-                this.update_vote(react_type, from_id, to_id, false, false);
+                this.update_vote(react_type, from_id, to_id, collection, false, false);
             }
         });
-        this.calculate_stamps();
+        this.calculate_stamps(collection);
     }
 
 
@@ -394,13 +462,24 @@ module.exports = {
 		return res.json({data: filteredDocs});
     },
 	
+	getRegenvotes: async (req, res) => {
+		const client = new MongoClient(database_path, { useNewUrlParser: true, useUnifiedTopology: true });
+    //const employees = await Employees.find({});
+	    await client.connect();
+		const collection = client.db("Kelvin").collection("regenvotes");
+        const filteredDocs = await collection.find({}).toArray();
+		console.log(filteredDocs);
+		client.close();
+		return res.json({data: filteredDocs});
+    },
+	
 	getVotesByTransaction: async (req, res) => {
 		const stamps = new StampsModule();
 		await stamps.init();
 		
 		let resultData = [];
 		for (let i = 0; i < req.query.transactions.length; i++) {
-			resultData.push(await stamps.utils.get_votes_by_transaction(req.query.transactions[i]));
+			resultData.push(await stamps.utils.get_votes_by_transaction(req.query.transactions[i], req.query.collection));
 		}
 		return res.json({data: resultData});
 	},
@@ -408,22 +487,22 @@ module.exports = {
 	updateVote: async (req, res) => {
 		const stamps = new StampsModule();
 		await stamps.init();
-		const success = await stamps.update_vote(req.query.stampType, req.query.fromId, req.query.fromName, req.query.toId, req.query.toTransaction); //req.query.negative is true in the case of a downvote, and false otherwise.
+		const success = await stamps.update_vote(req.query.stampType, req.query.fromId, req.query.fromName, req.query.toId, req.query.toTransaction, req.query.collection); //req.query.negative is true in the case of a downvote, and false otherwise.
 	    return res.json({data: success});
 	},
 	
 	updateVoteForTransaction: async (req, res) => {
 		const stamps = new StampsModule();
 		await stamps.init();
-		const successSource = await stamps.update_vote(req.query.stampType, req.query.fromId, req.query.fromName, req.query.toIdSource, req.query.toTransaction);
-	    const successDest = await stamps.update_vote(req.query.stampType, req.query.fromId, req.query.fromName, req.query.toIdDest, req.query.toTransaction);
+		const successSource = await stamps.update_vote(req.query.stampType, req.query.fromId, req.query.fromName, req.query.toIdSource, req.query.toTransaction, req.query.collection);
+	    const successDest = await stamps.update_vote(req.query.stampType, req.query.fromId, req.query.fromName, req.query.toIdDest, req.query.toTransaction, req.query.collection);
 	    return res.json({data: successSource && successDest});
 	},
 	
 	getUserStamps: async (req, res) => {
 		const stamps = new StampsModule();
 		await stamps.init();
-		let resultData = await stamps.get_user_stamps(req.query.user);
+		let resultData = await stamps.get_user_stamps(req.query.user, req.query.collection);
 		return res.json({data: resultData});
 	},
 	
@@ -431,8 +510,8 @@ module.exports = {
 		const stamps = new StampsModule();
 		await stamps.init();
 		const successAdd = await stamps.utils.add_transaction(req.query.transactionId, req.query.amountSent, req.query.source, req.query.dest, req.query.description);
-		const successSource = await stamps.update_vote("zerostamp", "placeholder_user", "placeholder_name", req.query.source, req.query.transactionId, false);
-        const successDest = await stamps.update_vote("zerostamp", "placeholder_user", "placeholder_name", req.query.dest, req.query.transactionId, false);
+		const successSource = await stamps.update_vote("zerostamp", "placeholder_user", "placeholder_name", req.query.source, req.query.transactionId, "uservotes". false);
+        const successDest = await stamps.update_vote("zerostamp", "placeholder_user", "placeholder_name", req.query.dest, req.query.transactionId, "uservotes", false);
         return res.json({data: successAdd && successSource && successDest});		
 	},
 	
