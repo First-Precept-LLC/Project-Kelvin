@@ -7,7 +7,7 @@ reputationToken.sol is our **token minting contract**, it's deployed on ethereum
 
 Those transactions are then sent to our **API** (near-wallet-API-server), which captures them in our database, and lists them in our **Venmo-like frontend** (frontend folder).  There, people's transactions can be voted on based on how good they are for the world, and those people can earn votes to vote on others' transactions (the **algorithm for this lives in the Javascript Translation** folder, and the data goes through our API).
 
-In addition to this "subjective" ranking, all transactions can be ranked in a more "objective" way using our "Impact Analysis" framework.  By clicking on the "Analyze Impact" button, anyone can analyze the impact of a transaction.  Right now, we are **pinging a Carbon Impact API (carboninterface.com)** that can pull the carbon impact of a flight into our impact analysis framework, (also in the near-wallet-api-server). In the future, we aim to allow many more automated, as well as manual tools to analyze complex systems for their imapct.
+In addition to this "subjective" ranking, all transactions can be ranked in a more "objective" way using our "Impact Analysis" framework.  By clicking on the "Analyze Impact" button, anyone can analyze the impact of a transaction.  Right now, we are **pinging a Carbon Impact API (carboninterface.com)** that can pull the carbon impact of a flight into our impact analysis framework, (also in the near-wallet-api-server). In the future, we aim to allow many more automated, as well as manual tools to analyze complex systems for their impact.
 
 This impact then gets calculated back into the vote count.
 
