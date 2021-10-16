@@ -71,6 +71,7 @@ class Utilities {
         this.UserVotes = client.db("Kelvin").collection("uservotes");
 		this.Transactions = client.db("Kelvin").collection("transactions");
 		this.RegenVotes = client.db("Kelvin").collection("regenvotes");
+		this.Proposals = client.db("Kelvin").collection("proposals");
     }
 
     async clearVotes() {
@@ -118,7 +119,7 @@ class Utilities {
         return 0.0;
     }
     //A series of databse functions follow. Modify based on db implementation.
-    async update_vote(userwallet, user_name, voted_for, voted_for_transaction, vote_quantity, collection) {
+    async update_vote(userwallet, user_name, voted_for, voted_for_transaction, voted_for_proposal, vote_quantity, collection) {
 		let targetTable = null;
 		if(collection == "regen") {
 			targetTable = this.RegenVotes;
@@ -130,7 +131,8 @@ class Utilities {
             sourceName: user_name,
             votedFor: voted_for,
             targetTransaction: voted_for_transaction,
-            votecount: vote_quantity 
+            votecount: vote_quantity,
+            targetProposal: voted_for_proposal			
         };
         await targetTable.insertOne(insertedObj);
     }
@@ -146,6 +148,17 @@ class Utilities {
 			timestamp: new Date().getTime()
 		};
 		await this.Transactions.insertOne(insertedObj);
+		return true;
+	}
+	
+	async add_proposal(id, proposing_user, desc) {
+		let insertedObj = {
+			proposalId: id,
+			proposer: proposing_user,
+			description: desc,
+			timestamp: new Date().getTime()
+		};
+		await this.Proposals.insertOne(insertedObj);
 		return true;
 	}
 
@@ -187,6 +200,21 @@ class Utilities {
 			targetTable = this.UserVotes;
 		}
         let allUserVotes = await targetTable.find({targetTransaction: transaction}).toArray();
+        let total = 0;
+        for (let i = 0; i < allUserVotes.length; i++) {
+            total += allUserVotes[i].votecount;
+        }
+        return total;
+    }
+	
+	async get_votes_by_proposal(proposal, collection){
+		let targetTable = null;
+		if(collection == "regen") {
+			targetTable = this.RegenVotes;
+		} else {
+			targetTable = this.UserVotes;
+		}
+        let allUserVotes = await targetTable.find({targetProposal: proposal}).toArray();
         let total = 0;
         for (let i = 0; i < allUserVotes.length; i++) {
             total += allUserVotes[i].votecount;
@@ -243,6 +271,11 @@ class Utilities {
 		let offset = PAGE_SIZE * (page_number - 1);
 		return (await this.Transactions.aggregate([{$sort: {timestamp: -1}}, {$skip: offset}, {$limit: PAGE_SIZE}])).toArray();
 	}
+	
+	async get_proposal_page(page_number) {
+		let offset = PAGE_SIZE * (page_number - 1);
+		return (await this.Proposals.aggregate([{$sort: {timestamp: -1}}, {$skip: offset}, {$limit: PAGE_SIZE}])).toArray();
+	}
 
 }
 
@@ -277,7 +310,7 @@ class StampsModule {
 		this.utils.update_vote('alphonse', 'alphonse_name', 'barry', 'seed_transaction', 7, "regen"); //Generate start set IDs and replace these
     }
 
-    async update_vote(stamp_type, from_id, from_name, to_id, to_transaction, collection, negative=false, recalculate=true){
+    async update_vote(stamp_type, from_id, from_name, to_id, to_transaction, to_proposal, collection, negative=false, recalculate=true){
         if (to_id == stampy_id) {
             //votes for stampy do nothing
             return false;
@@ -304,7 +337,7 @@ class StampsModule {
         }
 
         this.total_votes += vote_strength;
-        await this.utils.update_vote(from_id, from_name, to_id, to_transaction, vote_strength, collection);
+        await this.utils.update_vote(from_id, from_name, to_id, to_transaction, to_proposal, vote_strength, collection);
         this.utils.users = await this.utils.get_users();
         this.utils.update_ids_list();
         if (recalculate) {
@@ -484,19 +517,43 @@ module.exports = {
 		return res.json({data: resultData});
 	},
 	
+	getVotesByProposal: async (req, res) => {
+		const stamps = new StampsModule();
+		await stamps.init();
+		
+		let resultData = [];
+		for (let i = 0; i < req.query.transactions.length; i++) {
+			resultData.push(await stamps.utils.get_votes_by_proposal(req.query.proposals[i], req.query.collection));
+		}
+		return res.json({data: resultData});
+	},
+	
 	updateVote: async (req, res) => {
 		const stamps = new StampsModule();
 		await stamps.init();
-		const success = await stamps.update_vote(req.query.stampType, req.query.fromId, req.query.fromName, req.query.toId, req.query.toTransaction, req.query.collection); //req.query.negative is true in the case of a downvote, and false otherwise.
+		if (! req.query.toTransaction) {
+		    req.query.toTransaction = null;
+		}
+		if (! req.query.toProposal) {
+			req.query.toProposal = null;
+		}
+		const success = await stamps.update_vote(req.query.stampType, req.query.fromId, req.query.fromName, req.query.toId, req.query.toTransaction, req.query.toProposal, req.query.collection, req.query.negative); //req.query.negative is true in the case of a downvote, and false otherwise.
 	    return res.json({data: success});
 	},
 	
 	updateVoteForTransaction: async (req, res) => {
 		const stamps = new StampsModule();
 		await stamps.init();
-		const successSource = await stamps.update_vote(req.query.stampType, req.query.fromId, req.query.fromName, req.query.toIdSource, req.query.toTransaction, req.query.collection);
-	    const successDest = await stamps.update_vote(req.query.stampType, req.query.fromId, req.query.fromName, req.query.toIdDest, req.query.toTransaction, req.query.collection);
+		const successSource = await stamps.update_vote(req.query.stampType, req.query.fromId, req.query.fromName, req.query.toIdSource, req.query.toTransaction, null, req.query.collection, req.query.negative);
+	    const successDest = await stamps.update_vote(req.query.stampType, req.query.fromId, req.query.fromName, req.query.toIdDest, req.query.toTransaction, null, req.query.collection, req.query.negative);
 	    return res.json({data: successSource && successDest});
+	},
+	
+	updateVoteForProposal: async (req, res) => {
+		const stamps = new StampsModule();
+		await stamps.init();
+		const success = await stamps.update_vote(req.query.stampType, req.query.proposer, req.query.proposerName, req.query.toIdSource, null, req.query.toProposal, req.query.collection, req.query.negative);
+	    return res.json({data: success});
 	},
 	
 	getUserStamps: async (req, res) => {
@@ -515,10 +572,25 @@ module.exports = {
         return res.json({data: successAdd && successSource && successDest});		
 	},
 	
+	addNewProposal: async (req, res) => {
+		const stamps = new StampsModule();
+		await stamps.init();
+		const successAdd = await stamps.utils.add_proposal(req.query.proposalId, req.query.proposer, req.query.description);
+		const successVote = await stamps.update_vote("zerostamp", "placeholder_user", "placeholder_name", req.query.proposer, null, req.query.proposalId, "uservotes". false);
+        return res.json({data: successAdd && successVote});		
+	},
+	
 	getTransactionPage: async (req, res) => {
 		const stamps = new StampsModule();
 		await stamps.init();
 		let resultData = await stamps.utils.get_transaction_page(req.query.pageNumber);
+		return res.json({data: resultData});
+	}
+	
+	getProposalPage: async (req, res) => {
+		const stamps = new StampsModule();
+		await stamps.init();
+		let resultData = await stamps.utils.get_proposal_page(req.query.pageNumber);
 		return res.json({data: resultData});
 	}
 
