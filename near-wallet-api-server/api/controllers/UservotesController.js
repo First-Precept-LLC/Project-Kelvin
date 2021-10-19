@@ -45,6 +45,8 @@ class Utilities {
     static ids = null;
     static index = null;
     static scores = null;
+	static temperaturescores = null;
+	static capitalscores = null;
 
     static modules_dict = {};
 
@@ -68,15 +70,17 @@ class Utilities {
 
     async init() {
         await client.connect();
-        this.UserVotes = client.db("Kelvin").collection("uservotes");
+        this.TimeVotes = client.db("Kelvin").collection("uservotes");
 		this.Transactions = client.db("Kelvin").collection("transactions");
-		this.RegenVotes = client.db("Kelvin").collection("regenvotes");
+		this.TemperatureVotes = client.db("Kelvin").collection("temperaturevotes");
+		this.CapitalVotes = client.db("Kelvin").collection("capitalvotes");
 		this.Proposals = client.db("Kelvin").collection("proposals");
     }
 
     async clearVotes() {
-        await this.UserVotes.deleteMany({});
-		await this.RegenVotes.deleteMany({});
+        await this.TimeVotes.deleteMany({});
+		await this.TemperatureVotes.deleteMany({});
+		await this.CapitalVotes.deleteMany({});
     }
 
     update_ids_list() {
@@ -111,7 +115,7 @@ class Utilities {
     get_user_score(user, collection) {
         let userIndex = this.index_dammit(user);
         if (userIndex) {
-			if (collection == "regen") {
+			if (collection == "temperature") {
 				return this.regenscores[index];
 			}
             return this.scores[index];
@@ -121,8 +125,10 @@ class Utilities {
     //A series of databse functions follow. Modify based on db implementation.
     async update_vote(userwallet, user_name, voted_for, voted_for_transaction, voted_for_proposal, vote_quantity, collection) {
 		let targetTable = null;
-		if(collection == "regen") {
-			targetTable = this.RegenVotes;
+		if(collection == "temperature") {
+			targetTable = this.TemperatureVotes;
+		} else if(collection == "capital") {
+			targetTable = this.CapitalVotes;
 		} else {
 			targetTable = this.UserVotes;
 		}
@@ -164,8 +170,10 @@ class Utilities {
 
     async get_votes_by_user(userwallet, collection){
 		let targetTable = null;
-		if(collection == "regen") {
-			targetTable = this.RegenVotes;
+		if(collection == "temperature") {
+			targetTable = this.TemperatureVotes;
+		} else if(collection == "capital") {
+			targetTable = this.CapitalVotes;
 		} else {
 			targetTable = this.UserVotes;
 		}
@@ -179,8 +187,10 @@ class Utilities {
 
     async get_votes_for_user(userwallet, collection){
 		let targetTable = null;
-		if(collection == "regen") {
-			targetTable = this.RegenVotes;
+		if(collection == "temperature") {
+			targetTable = this.TemperatureVotes;
+		} else if(collection == "capital") {
+			targetTable = this.CapitalVotes;
 		} else {
 			targetTable = this.UserVotes;
 		}
@@ -194,8 +204,10 @@ class Utilities {
 
     async get_votes_by_transaction(transaction, collection){
 		let targetTable = null;
-		if(collection == "regen") {
-			targetTable = this.RegenVotes;
+		if(collection == "temperature") {
+			targetTable = this.TemperatureVotes;
+		} else if(collection == "capital") {
+			targetTable = this.CapitalVotes;
 		} else {
 			targetTable = this.UserVotes;
 		}
@@ -209,8 +221,10 @@ class Utilities {
 	
 	async get_votes_by_proposal(proposal, collection){
 		let targetTable = null;
-		if(collection == "regen") {
-			targetTable = this.RegenVotes;
+		if(collection == "temperature") {
+			targetTable = this.TemperatureVotes;
+		} else if(collection == "capital") {
+			targetTable = this.CapitalVotes;
 		} else {
 			targetTable = this.UserVotes;
 		}
@@ -224,8 +238,10 @@ class Utilities {
 
     async get_total_votes(collection){
 		let targetTable = null;
-		if(collection == "regen") {
-			targetTable = this.RegenVotes;
+		if(collection == "temperature") {
+			targetTable = this.TemperatureVotes;
+		} else if(collection == "capital") {
+			targetTable = this.CapitalVotes;
 		} else {
 			targetTable = this.UserVotes;
 		}
@@ -239,8 +255,10 @@ class Utilities {
 
     async get_all_user_votes(collection){
 		let targetTable = null;
-		if(collection == "regen") {
-			targetTable = this.RegenVotes;
+		if(collection == "temperature") {
+			targetTable = this.TemperatureVotes;
+		} else if(collection == "capital") {
+			targetTable = this.CapitalVotes;
 		} else {
 			targetTable = this.UserVotes;
 		}
@@ -249,8 +267,10 @@ class Utilities {
 
     async get_users(collection) {
 		let targetTable = null;
-		if(collection == "regen") {
-			targetTable = this.RegenVotes;
+		if(collection == "temperature") {
+			targetTable = this.TemperatureVotes;
+		} else if(collection == "capital") {
+			targetTable = this.CapitalVotes;
 		} else {
 			targetTable = this.UserVotes;
 		}
@@ -297,17 +317,20 @@ class StampsModule {
 
     async init() {
         await this.utils.init()
-        this.total_votes = await this.utils.get_total_votes("uservotes");
-		this.total_regen_votes = await this.utils.get_total_votes("regen");
-        await this.calculate_stamps("uservotes");
-        await this.calculate_stamps("regen");		
+        this.total_votes = await this.utils.get_total_votes("time");
+		this.total_temperature_votes = await this.utils.get_total_votes("temperature");
+		this.total_capital_votes = await this.utils.get_total_votes("capital");
+        await this.calculate_stamps("time");
+        await this.calculate_stamps("temperature");
+        await this.calculate_stamps("capital");		
     }
 
     reset_stamps() {
         console.log("WIPING STAMP RECORDS");
         this.utils.clearVotes()
-        this.utils.update_vote('alice', 'alice_name', 'bob', 'seed_transaction', 7, "uservotes"); //Generate start set IDs and replace these
-		this.utils.update_vote('alphonse', 'alphonse_name', 'barry', 'seed_transaction', 7, "regen"); //Generate start set IDs and replace these
+        this.utils.update_vote('alice', 'alice_name', 'bob', 'seed_transaction', null, 7, "time"); //Generate start set IDs and replace these
+		this.utils.update_vote('alphonse', 'alphonse_name', 'barry', 'seed_transaction', null, 7, "temperature"); //Generate start set IDs and replace these
+		this.utils.update_vote('paul', 'paul_name', 'carl', 'seed_transaction', null, 7, "capital"); //Generate start set IDs and replace these
     }
 
     async update_vote(stamp_type, from_id, from_name, to_id, to_transaction, to_proposal, collection, negative=false, recalculate=true){
@@ -335,8 +358,15 @@ class StampsModule {
         if (negative) {
             vote_strength = -vote_strength;
         }
+		
 
-        this.total_votes += vote_strength;
+        if (collection == "temperature") {
+			this.total_temperature_votes += vote_strength;
+		} else if (collection == "capital") {
+			this.total_capital_votes += vote_strength;
+		} else {
+			this.total_votes += vote_strength;
+		}
         await this.utils.update_vote(from_id, from_name, to_id, to_transaction, to_proposal, vote_strength, collection);
         this.utils.users = await this.utils.get_users();
         this.utils.update_ids_list();
@@ -384,9 +414,12 @@ class StampsModule {
 		
 		console.log(users_matrix);
 		
-		if (collection == "regen") {
-			this.utils.regenscores = solve(users_matrix, user_count_matrix).to1DArray();
-		    console.log(this.utils.regenscores);
+		if (collection == "temperature") {
+			this.utils.temperaturescores = solve(users_matrix, user_count_matrix).to1DArray();
+		    console.log(this.utils.temperaturescores);
+		} else if (collection == "capital"){
+			this.utils.capitalscores = solve(users_matrix, user_count_matrix).to1DArray();
+			console.log(this.utils.capitalscores);
 		} else {
 	        this.utils.scores = solve(users_matrix, user_count_matrix).to1DArray();
 		    console.log(this.utils.scores);		
@@ -428,16 +461,22 @@ class StampsModule {
         let index = this.utils.index_dammit(user);
         console.log("get_user_stamps for " + String(user)+ ", index=" + String(index));
         let stamps = 0.0; //Maybe readd nonzero predicate when seed users are figured out?
-		if (collection == "regen") {
-	        stamps = this.utils.regenscores[index] * this.total_regen_votes;
+		if (collection == "temperature") {
+	        stamps = this.utils.temperaturescores[index] * this.total_temperature_votes;
+		} else if (collection == "capital") {
+			stamps = this.utils.capitalscores[index] * this.total_capital_votes
 		} else {
 			stamps = this.utils.scores[index] * this.total_votes;
 		}
         console.log(stamps);
-		if (collection == regen) {
-			console.log(this.utils.regenscores[index]);
-		    console.log(this.utils.regenscores);
-            console.log(this.total_regen_votes);
+		if (collection == "temperature") {
+			console.log(this.utils.temperaturescores[index]);
+		    console.log(this.utils.temperaturescores);
+            console.log(this.total_temperature_votes);
+		} else if (collection == "capital") {
+			console.log(this.utils.capitalscores[index]);
+		    console.log(this.utils.capitalscores);
+            console.log(this.total_capital_votes);
 		} else {
 			console.log(this.utils.scores[index]);
 		    console.log(this.utils.scores);
@@ -495,11 +534,22 @@ module.exports = {
 		return res.json({data: filteredDocs});
     },
 	
-	getRegenvotes: async (req, res) => {
+	getTemperaturevotes: async (req, res) => {
 		const client = new MongoClient(database_path, { useNewUrlParser: true, useUnifiedTopology: true });
     //const employees = await Employees.find({});
 	    await client.connect();
-		const collection = client.db("Kelvin").collection("regenvotes");
+		const collection = client.db("Kelvin").collection("temperaturevotes");
+        const filteredDocs = await collection.find({}).toArray();
+		console.log(filteredDocs);
+		client.close();
+		return res.json({data: filteredDocs});
+    },
+	
+	getCapitalvotes: async (req, res) => {
+		const client = new MongoClient(database_path, { useNewUrlParser: true, useUnifiedTopology: true });
+    //const employees = await Employees.find({});
+	    await client.connect();
+		const collection = client.db("Kelvin").collection("capitalvotes");
         const filteredDocs = await collection.find({}).toArray();
 		console.log(filteredDocs);
 		client.close();
