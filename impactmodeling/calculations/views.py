@@ -62,6 +62,6 @@ def model(request, user, proposal_id, param1, operator, param2):
     simulation = Executor(exec_context=local_mode_ctx, configs=exp.configs)
     raw_system_events, tensor_field, sessions = simulation.execute()
     final_result = raw_system_events[len(raw_system_events) - 1]['average_result']
-    db.models.update_one({"user": user, "proposalId": proposal_id}, {"user": user, "proposalId": proposal_id, "score": final_result}, True)
+    db.models.update_one({"user": user, "proposalId": proposal_id}, {"$set": {"user": user, "proposalId": proposal_id, "score": final_result}}, True)
 
 model(None, "alice", "sample_proposal", 1, "+", [10, 11])
