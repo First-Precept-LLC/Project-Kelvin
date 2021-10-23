@@ -19,9 +19,6 @@ register_converter(DistributionConverter, "dist")
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('<str:user>/<str:proposal_id>/<int:param1>/<str:operator>/<int:param2>', views.model),
-    path('<str:user>/<str:proposal_id>/<dist:param1>/<str:operator>/<int:param2>', views.model),
-    path('<str:user>/<str:proposal_id>/<dist:param1>/<str:operator>/<dist:param2>', views.model),
-    path('<str:user>/<str:proposal_id>/<int:param1>/<str:operator>/<dist:param2>', views.model)
+    path('update-score', views.model)
 
 ]

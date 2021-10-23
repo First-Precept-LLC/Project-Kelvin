@@ -10,7 +10,13 @@ TOTAL_RANDOM_SAMPLES = 100000
 def index(request):
     return HttpResponse("Hello, world. You're at the calculations index.")
 
-def model(request, user, proposal_id, param1, operator, param2):
+def model(request):
+
+    user = request.POST.get("user")
+    proposal_id = request.POST.get("proposal_id")
+    param1 = request.POST.get("param1")
+    operator = request.POST.get("operator")
+    param2 = request.POST.get("param2")
 
     def generate_mean_stddev(lower_bound, upper_bound):
         mean = lower_bound + ((upper_bound - lower_bound)/2.0)
@@ -64,4 +70,4 @@ def model(request, user, proposal_id, param1, operator, param2):
     final_result = raw_system_events[len(raw_system_events) - 1]['average_result']
     db.models.update_one({"user": user, "proposalId": proposal_id}, {"$set": {"user": user, "proposalId": proposal_id, "score": final_result}}, True)
 
-model(None, "alice", "sample_proposal", 1, "+", [10, 11])
+    return HttpResponse(user + " gave " + proposal_id + " a score of " + str(final_result))
