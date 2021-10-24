@@ -4,12 +4,15 @@ from cadCAD.engine import ExecutionMode, ExecutionContext, Executor
 from scipy.stats import norm
 import numpy as np
 from impactmodeling.utils import db
+from django.views.decorators.csrf import csrf_exempt
+
 
 TOTAL_RANDOM_SAMPLES = 100000
 
 def index(request):
     return HttpResponse("Hello, world. You're at the calculations index.")
 
+@csrf_exempt
 def model(request):
 
     user = request.POST.get("user")
@@ -19,6 +22,8 @@ def model(request):
     param2 = request.POST.get("param2")
 
     def generate_mean_stddev(lower_bound, upper_bound):
+        lower_bound = int(lower_bound)
+        upper_bound = int(upper_bound)
         mean = lower_bound + ((upper_bound - lower_bound)/2.0)
         stddev = np.sqrt(TOTAL_RANDOM_SAMPLES) * (upper_bound - lower_bound)/3.29
         return mean, stddev
@@ -47,8 +52,8 @@ def model(request):
 
     def take_a_sample(_params, substep, sH, s, _input, **kwargs):
         current_avg = s["average_result"]
-        leftValue = param1 if loc1 == None else norm.rvs(loc=loc1, scale=scale1)
-        rightValue = param2 if loc2 == None else norm.rvs(loc=loc2, scale=scale2)
+        leftValue = int(param1) if loc1 == None else norm.rvs(loc=loc1, scale=scale1)
+        rightValue = int(param2) if loc2 == None else norm.rvs(loc=loc2, scale=scale2)
         if operator == "+":
             current_avg += (leftValue + rightValue)/TOTAL_RANDOM_SAMPLES
         elif operator == "-":
