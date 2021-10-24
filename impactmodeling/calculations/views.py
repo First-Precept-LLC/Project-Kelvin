@@ -21,6 +21,11 @@ def model(request):
     operator = request.POST.get("operator")
     param2 = request.POST.get("param2")
 
+    if isinstance(param1, str) and param1.__contains__(","):
+        param1 = param1.split(",")
+    if isinstance(param2, str) and param2.__contains__(","):
+        param2 = param2.split(",")
+
     def generate_mean_stddev(lower_bound, upper_bound):
         lower_bound = int(lower_bound)
         upper_bound = int(upper_bound)
@@ -44,9 +49,6 @@ def model(request):
         loc1, scale1 = generate_mean_stddev(param1[0], param1[1])
     if isinstance(param2, list):
         loc2, scale2 = generate_mean_stddev(param2[0], param2[1])
-
-    print(loc2)
-    print(scale2)
 
     exp = Experiment()
 
