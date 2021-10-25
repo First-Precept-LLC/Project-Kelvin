@@ -635,7 +635,7 @@ module.exports = {
 		await stamps.init();
 		let resultData = await stamps.utils.get_transaction_page(req.query.pageNumber);
 		return res.json({data: resultData});
-	}
+	},
 	
 	getProposalPage: async (req, res) => {
 		const stamps = new StampsModule();
@@ -643,6 +643,5 @@ module.exports = {
 		let resultData = await stamps.utils.get_proposal_page(req.query.pageNumber);
 		return res.json({data: resultData});
 	}
-
 };
 
