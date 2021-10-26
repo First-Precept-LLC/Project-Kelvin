@@ -75,6 +75,7 @@ class Utilities {
 		this.TemperatureVotes = client.db("Kelvin").collection("temperaturevotes");
 		this.CapitalVotes = client.db("Kelvin").collection("capitalvotes");
 		this.Proposals = client.db("Kelvin").collection("proposals");
+		this.Models = client.db("Kelvin").collection("models");
     }
 
     async clearVotes() {
@@ -235,6 +236,23 @@ class Utilities {
         }
         return total;
     }
+	
+	async get_average_impact_by_proposal(proposal) {
+		let all_impact_votes = await this.Models.find({proposalId: proposal}).toArray();
+		for (let i = 0; i < all_impact_votes.length; i++) {
+            total += all_impact_votes[i].score;
+        }
+        return total/all_impact_votes.length;
+	}
+	
+	async get_average_impact_by_user(userwallet) {
+		let proposals_by_user = await this.Proposals.find({proposer: userwallet}).toArray();
+		let total = 0;
+		for (let i = 0; i < proposals_by_user.length; i++) {
+			total += get_average_impact_by_proposal(proposals_by_user[i].proposalId);
+		}
+		return total/proposals_by_user.length;
+	}
 
     async get_total_votes(collection){
 		let targetTable = null;
@@ -642,6 +660,22 @@ module.exports = {
 		await stamps.init();
 		let resultData = await stamps.utils.get_proposal_page(req.query.pageNumber);
 		return res.json({data: resultData});
+	},
+	
+	getProposalScore: async (req, res) => {
+		const stamps = new StampsModule();
+		await stamps.init();
+		let total_proposal_votes = (await stamps.utils.get_votes_by_proposal(req.query.proposalId, "time")) + (await stamps.utils.get_votes_by_proposal(req.query.proposalId, "temperature")) + (await stamps.utils.get_votes_by_proposal(req.query.proposalId, "capital"));
+		let average_impact_rating = await stamps.utils.get_average_impact_by_proposal(req.query.proposalId);
+		return res.json({data: average_impact_rating + total_proposal_votes});
+	},
+	
+	getUserScore: async (req, res) => {
+		const stamps = new StampsModule();
+		await stamps.init();
+		let total_user_votes = (await stamps.utils.get_votes_for_user(req.query.user, "time")) + (await stamps.utils.get_votes_for_user(req.query.user, "temperature")) + (await stamps.utils.get_votes_for_user(req.query.user, "capital"));
+		let average_impact_rating = await stamps.utils.get_average_impact_by_user(req.query.user);
+		return res.json({data: average_impact_rating + total_user_votes});
 	}
 };
 
