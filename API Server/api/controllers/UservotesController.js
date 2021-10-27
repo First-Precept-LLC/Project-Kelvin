@@ -673,7 +673,7 @@ module.exports = {
 	getUserScore: async (req, res) => {
 		const stamps = new StampsModule();
 		await stamps.init();
-		let total_user_votes = (await stamps.get_user_stamps(req.query.user, "time")) + (await stamps.get_user_stamps(req.query.user, "temperature")) + (await stamps.get_user_stamps(req.query.user, "capital"));
+		let total_user_votes = (await stamps.utils.get_votes_for_user(req.query.user, "time")) + (await stamps.utils.get_votes_for_user(req.query.user, "temperature")) + (await stamps.utils.get_votes_for_user(req.query.user, "capital"));
 		let average_impact_rating = await stamps.utils.get_average_impact_by_user(req.query.user);
 		return res.json({data: average_impact_rating + total_user_votes});
 	}
