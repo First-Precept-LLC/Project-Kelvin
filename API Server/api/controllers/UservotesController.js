@@ -86,6 +86,7 @@ class Utilities {
 
     update_ids_list() {
         this.ids = this.users.sort();;
+		console.log(this.ids);
         this.index = {0: 0};
         for(let i = 0; i < this.ids.length; i++) {
             let userid = this.ids[i];
@@ -131,7 +132,7 @@ class Utilities {
 		} else if(collection == "capital") {
 			targetTable = this.CapitalVotes;
 		} else {
-			targetTable = this.UserVotes;
+			targetTable = this.TimeVotes;
 		}
         let insertedObj = {
             user: userwallet,
@@ -176,7 +177,7 @@ class Utilities {
 		} else if(collection == "capital") {
 			targetTable = this.CapitalVotes;
 		} else {
-			targetTable = this.UserVotes;
+			targetTable = this.TimeVotes;
 		}
         let allUserVotes = await targetTable.find({user: userwallet}).toArray();
         let total = 0;
@@ -193,7 +194,7 @@ class Utilities {
 		} else if(collection == "capital") {
 			targetTable = this.CapitalVotes;
 		} else {
-			targetTable = this.UserVotes;
+			targetTable = this.TimeVotes;
 		}
         let allUserVotes = await targetTable.find({votedFor: userwallet}).toArray();
         let total = 0;
@@ -210,7 +211,7 @@ class Utilities {
 		} else if(collection == "capital") {
 			targetTable = this.CapitalVotes;
 		} else {
-			targetTable = this.UserVotes;
+			targetTable = this.TimeVotes;
 		}
         let allUserVotes = await targetTable.find({targetTransaction: transaction}).toArray();
         let total = 0;
@@ -227,7 +228,7 @@ class Utilities {
 		} else if(collection == "capital") {
 			targetTable = this.CapitalVotes;
 		} else {
-			targetTable = this.UserVotes;
+			targetTable = this.TimeVotes;
 		}
         let allUserVotes = await targetTable.find({targetProposal: proposal}).toArray();
         let total = 0;
@@ -239,6 +240,10 @@ class Utilities {
 	
 	async get_average_impact_by_proposal(proposal) {
 		let all_impact_votes = await this.Models.find({proposalId: proposal}).toArray();
+		let total = 0;
+		if (all_impact_votes.length < 1) {
+			return 0;
+		}
 		for (let i = 0; i < all_impact_votes.length; i++) {
             total += all_impact_votes[i].score;
         }
@@ -248,6 +253,9 @@ class Utilities {
 	async get_average_impact_by_user(userwallet) {
 		let proposals_by_user = await this.Proposals.find({proposer: userwallet}).toArray();
 		let total = 0;
+		if (proposals_by_user.length < 1) {
+			return 0;
+		}
 		for (let i = 0; i < proposals_by_user.length; i++) {
 			total += get_average_impact_by_proposal(proposals_by_user[i].proposalId);
 		}
@@ -261,7 +269,7 @@ class Utilities {
 		} else if(collection == "capital") {
 			targetTable = this.CapitalVotes;
 		} else {
-			targetTable = this.UserVotes;
+			targetTable = this.TimeVotes;
 		}
         let allUserVotes = await targetTable.find({}).toArray();
         let total = 0;
@@ -278,7 +286,7 @@ class Utilities {
 		} else if(collection == "capital") {
 			targetTable = this.CapitalVotes;
 		} else {
-			targetTable = this.UserVotes;
+			targetTable = this.TimeVotes;
 		}
         return await targetTable.find({}).toArray();
     }
@@ -290,7 +298,7 @@ class Utilities {
 		} else if(collection == "capital") {
 			targetTable = this.CapitalVotes;
 		} else {
-			targetTable = this.UserVotes;
+			targetTable = this.TimeVotes;
 		}
         let users = [];
         let allUserVotes = await targetTable.find({}).toArray();
@@ -398,7 +406,11 @@ class StampsModule {
         //set up and solve the system of linear equations
         console.log("RECALCULATING STAMP SCORES");
 
-        this.utils.users = await this.utils.get_users();
+        let timeUsers = await this.utils.get_users("time");
+		let temperatureUsers = await this.utils.get_users("temperature");
+		let capitalUsers = await this.utils.get_users("capital");
+		let timeTempUsers = [...new Set([...timeUsers, ...temperatureUsers])];
+		this.utils.users = [...new Set([...timeTempUsers, ...capitalUsers])];
         this.utils.update_ids_list();
 
         let user_count = this.utils.users.length;
@@ -416,6 +428,7 @@ class StampsModule {
             let total_votes_by_user = await this.utils.get_votes_by_user(from_id, collection);
             if (total_votes_by_user != 0) {
                 let score = (this.user_karma * votes_for_user) / total_votes_by_user;
+				console.log(score);
                 users_matrix.set(toi, from_id_index, score); 
             }
 
@@ -430,7 +443,6 @@ class StampsModule {
         let user_count_matrix = Matrix.zeros(user_count, 1);
         user_count_matrix.set(0, 0, 1.0); //God has 1 karma
 		
-		console.log(users_matrix);
 		
 		if (collection == "temperature") {
 			this.utils.temperaturescores = solve(users_matrix, user_count_matrix).to1DArray();
