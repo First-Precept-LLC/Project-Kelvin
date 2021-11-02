@@ -6,6 +6,8 @@ body {
     width: 100vw;
     color: #F7F8FD !important;
     padding: 0;
+    margin: 0 auto !important;
+    max-width: none !important;
 }
 
 h1,
@@ -87,12 +89,13 @@ a {
 .content-uber {
     padding-bottom: 20px;
     font-size: 18px;
-    text-align: center;
+    text-align: left;
 }
 
 .content-impact {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
 }
 
 .navbar {
@@ -125,7 +128,8 @@ a {
 .content-component {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
+    text-align: left;
 }
 
 .content-body {
@@ -151,13 +155,13 @@ a {
 } */
 
 .add-btn {
-    height: 60px;
-    width: 60px;
+    height: 55px;
+    width: 55px;
     display: block;
-    margin: 0 auto;
+    margin-left: -27px;
     position: fixed;
     bottom: 10px;
-    left: 43vw;
+    left: 50vw;
 }
 
 @font-face {
@@ -174,6 +178,7 @@ a {
     padding: 15px 20px;
     border-radius: 30px;
     font-size: 12px;
+    white-space: pre;
 }
 
 .btn-big {
