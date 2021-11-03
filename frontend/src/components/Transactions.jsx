@@ -32,7 +32,7 @@ const Transactions = () => {
   }, []);
 
   async function getTransactions() {
-    const response = await fetch('https://api.projectkelvin.io/uservotes/getTransactionPage?pageNumber=1');
+    const response = await fetch('https://api.projectkelvin.io/uservotes/getProposalPage?pageNumber=1');
     const users = await response.json();
     items = users.data;
     console.log('items 123',items);
@@ -43,10 +43,10 @@ const Transactions = () => {
   async function getVotesForTransactions(items) {
     let transactions_request = '';
     for(var i = 0;i<items.length;i++){
-        transactions_request = transactions_request+'&transactions[]='+items[i].transactionId;
+        transactions_request = transactions_request+'&proposals='+items[i].proposalId;
     }
 
-    const response = await fetch('https://api.projectkelvin.io/uservotes/getVotesByTransaction?'+transactions_request);
+    const response = await fetch('https://api.projectkelvin.io/uservotes/getProposalScore?'+transactions_request);
     let transaction_votes = await response.json();
     transaction_votes = transaction_votes.data;
 
@@ -90,45 +90,60 @@ async function DownVote(item) {
   return (
     <>
     <Header />
+
+    <section class="container mb-3">
+        <div class="row">
+            <div class="col">
+                <nav class="nav nav-pills nav-justified">
+                    <a class="nav-link active" aria-current="page" href="#">Proposals</a>
+                    <a class="nav-link" href="#">Existing Proposals</a>
+                </nav>
+            </div>
+        </div>
+    </section>
+
+     <section class="container text-center ">
+        <div class="row mb-3">
+            <div class="col">
+                <h3 class="text-color">Existing Proposals</h3>
+            </div>
+        </div>
+        </section>
+  
     <div class="container page-wrapper text-center" >
 
         <div>
        <ul class="p-0">
         <h3 class="text-center m-3">Votes Left :{votes.toFixed()}</h3>
 
-           <div>
 
-    </div>
 
+        <div class="row">
     {items.map(function(item, index){
                     return (<>
 
-
-                        <div class="content-wrapper" >
-                <div class="content-component col-5 me-1">
-                    <div class="content-body"  >
-                        <img src="https://cdn.kulfyapp.com/kelvin/dp.png" alt="" width="48" height="48" />
-                        <img class="image-set" src="https://cdn.kulfyapp.com/kelvin/arrow.svg" alt="" width="18.01" height="13.72" />
-                        <img src="https://cdn.kulfyapp.com/kelvin/dp.png" alt="" width="48" height="48"/>
+            <div class="col my-block m-2 px-4 flex-column align-items-start">
+                <h5 class="mb-1 text-left">{item.description}</h5>
+                <div class="d-flex align-items-center">
+                    <img src="https://cdn.kulfyapp.com/celo/celo.svg" alt="" />
+                    <h6>20</h6>
+                </div>
+                <div class="d-flex justify-content-between w-100  align-items-center">
+                    <h6>{item.votes}</h6>
+                    <div>
+                        <img src="https://cdn.kulfyapp.com/celo/celo.svg" alt="" />
+                        <img src="https://cdn.kulfyapp.com/celo/celo.svg" alt="" />
+                        <img src="https://cdn.kulfyapp.com/celo/celo.svg" alt="" />
+                        <img src="https://cdn.kulfyapp.com/celo/celo.svg" alt="" />
                     </div>
-                    <p class=" color-text word-break"><b class="b-text text-white">{item.from}</b> paid <b class="b-text text-white">{item.to}</b></p>
-                    <p><b class="b-text color-text">Total - <img src="https://cdn.kulfyapp.com/kelvin/near_icon_wht.png" alt="" width="24" height="24"/>{item.amountSent} </b></p>
-                </div>
-                <div class="content-impact col-5" >
-                    <p class="content-uber" >{item.description}</p>
-                    <a href={`/flow?id=${item.transactionId}`}  class="btn-small analyse-impact">Analyse Impact</a>
-                </div>
-                <div class="text-center col-2">
-                    <a onClick={() => AddVote(item)} href="#"><img src="https://cdn.kulfyapp.com/kelvin/up-arrow.svg" width="8.37" height="19" alt="" /></a>
-                    <p class="content-margin b-text" >{item.votes}</p>
-                    <p class="content-margin b-text color-text" >Rewards</p><p><img src="https://cdn.kulfyapp.com/kelvin/near_icon_wht.png" alt="" width="24" height="24"/>{((item.amountSent*0.009)*item.votes).toFixed(2)}</p>
-                    <a onClick={() => DownVote(item)}   href="#"><img src="https://cdn.kulfyapp.com/kelvin/down_arrow.svg" width="8.37" height="19" alt=""/></a>
+                    <button class="btn btn-primary btn-color compact-btn" type="button"> Analyse Impact</button>
                 </div>
             </div>
+
                     </>);
                   })}
 
-    
+        </div>
 
 
       </ul>
