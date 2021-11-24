@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MIT
 //Deployed on alfajores testnet: 0x4F9f9c56C4Ba59545c5e8Ced29AA6e8E588A0dB8
 pragma solidity ^0.8.0;
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/ERC20.sol";
+//import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/ERC20.sol";
+import 'openzeppelin-solidity/contracts/token/ERC20/ERC20.sol';
+//import 'goodcontracts/contracts/curves/BancorFormula.sol';
 import "https://github.com/slim12kg/protofire-continous-token-task/blob/master/contracts/curves/BancorFormula.sol";
 contract ProposalToken is BancorFormula, ERC20 {
     using SafeMath for uint256;
