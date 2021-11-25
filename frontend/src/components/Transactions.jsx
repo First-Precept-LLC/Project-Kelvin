@@ -67,22 +67,22 @@ const Transactions = () => {
    setTrasactions(votes);
   }
 
- async function AddVote(item) {
+ async function AddVote(item,collection) {
     votes = votes - 1;
     console.log('add vote transaction before ',item);
     item.votes = item.votes  + 1;
     console.log('add vote transaction after',item);
     setTrasactions(item);
-    const response = await fetch(`https://api.projectkelvin.io/uservotes/updateVoteForTransaction?stampType=halfstamp&fromId=gkolluri.testnet&fromName=Girish Kolluri&toIdSource=${item.from}&toIdDest=${item.to}&toTransaction=${item.transactionId}&negative=false`);
+    const response = await fetch(`https://api.projectkelvin.io/uservotes/updateVoteForProposal?stampType=stamp&proposer=${item.proposer}&proposerName=null&toIdSource=null&toProposal=${item.proposalId}&fromId=${item.proposer}&fromName=null&collection=${collection}&negative=false`);
     //const users = await response.json();
     //setUsers(users);
   }
 
-async function DownVote(item) {
+async function DownVote(item,collection) {
     votes = votes - 1;
     item.votes = item.votes  - 1;
     setTrasactions(item);
-    const response = await fetch(`https://api.projectkelvin.io/uservotes/updateVoteForTransaction?stampType=halfstamp&fromId=gkolluri.testnet&fromName=Girish Kolluri&toIdSource=${item.from}&toIdDest=${item.to}&toTransaction=${item.transactionId}&negative=true`);
+    const response = await fetch(`https://api.projectkelvin.io/uservotes/updateVoteForProposal?stampType=stamp&proposer=${item.proposer}&proposerName=null&toIdSource=null&toProposal=${item.proposalId}&fromId=${item.proposer}&fromName=null&collection=${collection}&negative=true`);
     const users = await response.json();
     
   }
@@ -114,7 +114,7 @@ async function DownVote(item) {
 
         <div>
        <ul class="p-0">
-        <h3 class="text-center m-3">Votes Left :{votes.toFixed()}</h3>
+       
 
 
 
@@ -131,10 +131,14 @@ async function DownVote(item) {
                 <div class="d-flex justify-content-between w-100  align-items-center">
                     <h6>{item.votes}</h6>
                     <div>
-                        <img src="https://cdn.kulfyapp.com/celo/celo.svg" alt="" />
-                        <img src="https://cdn.kulfyapp.com/celo/celo.svg" alt="" />
-                        <img src="https://cdn.kulfyapp.com/celo/celo.svg" alt="" />
-                        <img src="https://cdn.kulfyapp.com/celo/celo.svg" alt="" />
+                      <a onClick={() => AddVote(item,'temperature')} href="#"> temp up<img src="https://cdn.kulfyapp.com/celo/celo.svg" alt="" /></a>
+                      <a onClick={() => AddVote(item,'time')} href="#"> time up  <img src="https://cdn.kulfyapp.com/celo/celo.svg" alt="" /></a>
+                         <a onClick={() => AddVote(item,'capital')} href="#"> capital up  <img src="https://cdn.kulfyapp.com/celo/celo.svg" alt="" /></a>
+                          <a onClick={() => DownVote(item,'temperature')} href="#"> temp down  <img src="https://cdn.kulfyapp.com/celo/celo.svg" alt="" /></a>
+                           <a onClick={() => DownVote(item,'time')} href="#"> time down  <img src="https://cdn.kulfyapp.com/celo/celo.svg" alt="" /></a>
+                            <a onClick={() => DownVote(item,'capital')} href="#"> capital down  <img src="https://cdn.kulfyapp.com/celo/celo.svg" alt="" /></a>
+
+
                     </div>
                     <button class="btn btn-primary btn-color compact-btn" type="button"> Analyse Impact</button>
                 </div>
