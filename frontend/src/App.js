@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import Big from 'big.js';
 import SignIn from './components/SignIn';
 import Transactions from './components/Transactions';
+import CreateProposal from './components/CreateProposal'
 import Header from './components/Header';
 import {
   BrowserRouter as Router,
@@ -26,10 +27,10 @@ function App() {
   async function initContract(){
     // Create a new contract instance with the HelloWorld contract info
     let instance = new kit.web3.eth.Contract( ProjectKelvin.abi, '0x4F9f9c56C4Ba59545c5e8Ced29AA6e8E588A0dB8')
-    let name = await instance.methods.name().call()
-    console.log(`Current Contract Name: "${name}"`);
-    let address = await instance.methods.createProposal(50,"Kelvin","K").call();
-    console.log(`Address of minted token: ${address}`);
+   // let name = await instance.methods.name().call()
+    //console.log(`Current Contract Name: "${name}"`);
+   //let address = await instance.methods.createProposal(50,"Kelvin","K").call();
+    //console.log(`Address of minted token: ${address}`);
   }
   initContract();
   return (
@@ -43,7 +44,10 @@ function App() {
         </Route>
         <Route path="/transactions">
             <Transactions />
-        </Route>      
+        </Route>   
+        <Route path="/create" >
+            <CreateProposal address={address}   />
+        </Route>     
     </Switch>
       
 <Route exact path="/">

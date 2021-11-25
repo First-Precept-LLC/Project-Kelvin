@@ -40,7 +40,7 @@ export class signIn extends React.Component {
 
 
   handleClick = async () => {
-		console.log("test 123");
+
 		  this.wallet.requestSignIn(
       'gkolluri.testnet',
       'NEAR Guest Book'
