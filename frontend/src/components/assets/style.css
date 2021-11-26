@@ -75,7 +75,24 @@ h6 {
     padding: 0 1rem;
     margin-bottom: 1rem;
 }
-
+.icon-shadow{
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2), 0 0px 4px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 32px;
+}
+.voting a{
+    margin: 5px;
+}
+.voting>div{
+    margin-bottom: 5px;
+}
+.voting>div span{
+    font-size: 10px;
+    text-align: center;
+}
+.mylabel{
+    font-size: 10px;
+    text-align: center;
+}
 input,
 .form-select {
     width: 100%;

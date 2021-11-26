@@ -123,24 +123,64 @@ async function DownVote(item,collection) {
                     return (<>
 
             <div class="col my-block m-2 px-4 flex-column align-items-start">
-                <h5 class="mb-1 text-left">{item.description}</h5>
-                <div class="d-flex align-items-center">
+                <h6 class="mb-1 text-left">{item.description}</h6>
+                <div class="d-flex  my-2 w-100 justify-content-between">
+                    <div class="d-flex align-items-center ">
                     <img src="https://cdn.kulfyapp.com/celo/celo.svg" alt="" />
                     <h6>20</h6>
+                    </div>
+                    <button class="btn btn-primary btn-color compact-btn my-2" type="button"> Analyse Impact</button>
                 </div>
-                <div class="d-flex justify-content-between w-100  align-items-center">
-                    <h6>{item.votes}</h6>
+                <div class="d-flex justify-content-between w-100 my-2 align-items-center">
                     <div>
-                      <a onClick={() => AddVote(item,'temperature')} href="#"> temp up<img src="https://cdn.kulfyapp.com/celo/celo.svg" alt="" /></a>
-                      <a onClick={() => AddVote(item,'time')} href="#"> time up  <img src="https://cdn.kulfyapp.com/celo/celo.svg" alt="" /></a>
-                         <a onClick={() => AddVote(item,'capital')} href="#"> capital up  <img src="https://cdn.kulfyapp.com/celo/celo.svg" alt="" /></a>
-                          <a onClick={() => DownVote(item,'temperature')} href="#"> temp down  <img src="https://cdn.kulfyapp.com/celo/celo.svg" alt="" /></a>
-                           <a onClick={() => DownVote(item,'time')} href="#"> time down  <img src="https://cdn.kulfyapp.com/celo/celo.svg" alt="" /></a>
-                            <a onClick={() => DownVote(item,'capital')} href="#"> capital down  <img src="https://cdn.kulfyapp.com/celo/celo.svg" alt="" /></a>
+                    <h6>{item.votes}</h6>
+                    <span class="mylabel">Total Count</span>
+                    </div>
+                    <div class="d-flex flex-row voting">
+                      {/* <div>
+                      <a onClick={() => AddVote(item,'temperature')} href="#"><img src="http://saidutt.com/temp/icons/tempUp.svg" class="icon-shadow" alt="" /></a>
+                      <a onClick={() => AddVote(item,'time')} href="#"><img src="http://saidutt.com/temp/icons/timeUp.svg" class="icon-shadow" alt="" /></a>
+                      <a onClick={() => AddVote(item,'capital')} href="#"><img src="http://saidutt.com/temp/icons/capitalUp.svg" class="icon-shadow" alt="" /></a>
+                     
+                      </div>
+                      <div>
+                        <span>Temperature</span>
+                        <span>Time</span>
+                        <span>Capital</span>
+                      </div>
+                    <div>
+                    <a onClick={() => DownVote(item,'temperature')} href="#"><img src="http://saidutt.com/temp/icons/tempDown.svg" class="icon-shadow" alt="" /></a>
+                      <a onClick={() => DownVote(item,'time')} href="#"><img src="http://saidutt.com/temp/icons/timeDown.svg" class="icon-shadow" alt="" /></a>
+                      <a onClick={() => DownVote(item,'capital')} href="#"><img src="http://saidutt.com/temp/icons/capitalDown.svg" class="icon-shadow" alt="" /></a>
 
+                    </div> */}
+                    <div>
+                      <h6>{item.votes}</h6>
+                      <div>
+                        <a onClick={() => AddVote(item,'temperature')} href="#"><img src="http://saidutt.com/temp/icons/tempUp.svg" class="icon-shadow" alt="" /></a>
+                        <a onClick={() => DownVote(item,'temperature')} href="#"><img src="http://saidutt.com/temp/icons/tempDown.svg" class="icon-shadow" alt="" /></a>
+                      </div>
+                      <span>Temperature</span>
+                    </div>
+                    <div>
+                      <h6>{item.votes}</h6>
+                      <div>
+                        <a onClick={() => AddVote(item,'temperature')} href="#"><img src="http://saidutt.com/temp/icons/timeUp.svg" class="icon-shadow" alt="" /></a>
+                        <a onClick={() => DownVote(item,'temperature')} href="#"><img src="http://saidutt.com/temp/icons/timeDown.svg" class="icon-shadow" alt="" /></a>
+                      </div>
+                      <span>Time</span>
+                    </div>
+                    <div>
+                      <h6>{item.votes}</h6>
+                      <div>
+                        <a onClick={() => AddVote(item,'temperature')} href="#"><img src="http://saidutt.com/temp/icons/capitalUp.svg" class="icon-shadow" alt="" /></a>
+                        <a onClick={() => DownVote(item,'temperature')} href="#"><img src="http://saidutt.com/temp/icons/capitalDown.svg" class="icon-shadow" alt="" /></a>
+                      </div>
+                      <span>Capital</span>
+                    </div>
 
                     </div>
-                    <button class="btn btn-primary btn-color compact-btn" type="button"> Analyse Impact</button>
+                    
                 </div>
             </div>
 
