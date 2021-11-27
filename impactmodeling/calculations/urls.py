@@ -19,6 +19,7 @@ register_converter(DistributionConverter, "dist")
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('update-score', views.model)
+    path('update-score', views.model),
+    path('save-variable', views.variable)
 
 ]
