@@ -111,7 +111,7 @@ export class output extends React.Component {
       const impactApiRoot = "https://impact.projectkelvin.io";
       const scoreCalculate = "/calculations/update-score";
       const impactRequestBody = {
-        user: "Barry",
+        user: 'You',
         proposal_id: "Proposal",
         param1: this.state.selectedTimeOptionV1.value,
         operator: this.state.selectedTimeOptionOperation.value,
@@ -146,7 +146,7 @@ export class output extends React.Component {
       const impactApiRoot = "https://impact.projectkelvin.io";
       const scoreCalculate = "/calculations/update-score";
       const impactRequestBody = {
-        user: "Barry",
+        user: 'You',
         proposal_id: "Proposal",
         param1: this.state.selectedCapitalOptionV1.value,
         operator: this.state.selectedCapitalOptionOperation.value,
@@ -181,7 +181,7 @@ export class output extends React.Component {
       const impactApiRoot = "https://impact.projectkelvin.io";
       const scoreCalculate = "/calculations/update-score";
       const impactRequestBody = {
-        user: "Barry",
+        user: 'You',
         proposal_id: "Proposal",
         param1: this.state.selectedOptionV1.value,
         operator: this.state.selectedOptionOperation.value,
@@ -448,10 +448,10 @@ export class output extends React.Component {
             </div>
           </div>
           <div class="d-grid gap-2 mt-4">
-            <button class="btn btn-primary btn-color" type="button">
+           <a href="/" ><button class="btn btn-primary btn-color" type="button">
               {" "}
               Done
-            </button>
+            </button></a>
           </div>
         </section>
       </div>
