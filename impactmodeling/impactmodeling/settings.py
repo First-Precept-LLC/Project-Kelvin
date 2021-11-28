@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-q7z1js#b(8zt9)g$07wau4n%crp5$x-r1r&6%cl4895p(ekmwv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -47,7 +48,29 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_WHITELIST = (
+  'https://celo.projectkelvin.io',
+)
+CORS_ALLOW_METHODS = [
+'GET',
+'OPTIONS',
+'POST',
+]
+
+CORS_ALLOW_HEADERS = [
+'accept',
+'accept-encoding',
+'Access-Control-Allow-Origin',
+'authorization',
+'content-type',
+'origin',
+'user-agent',
+]
+
 
 ROOT_URLCONF = 'impactmodeling.urls'
 
