@@ -126,10 +126,10 @@ async function DownVote(item,collection) {
                 <h6 class="mb-1 text-left">{item.description}</h6>
                 <div class="d-flex  my-2 w-100 justify-content-between">
                     <div class="d-flex align-items-center ">
-                    <img src="https://cdn.kulfyapp.com/celo/celo.svg" alt="" />
-                    <h6>20</h6>
+                    
+                    <h6></h6>
                     </div>
-                    <button class="btn btn-primary btn-color compact-btn my-2" type="button"> Analyse Impact</button>
+                   <a href={`/inputs?proposal=${item.proposalId}`} > <button class="btn btn-primary btn-color compact-btn my-2" type="button"> Analyse Impact</button></a>
                 </div>
                 <div class="d-flex justify-content-between w-100 my-2 align-items-center">
                     <div>

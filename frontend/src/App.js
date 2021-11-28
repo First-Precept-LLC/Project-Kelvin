@@ -8,9 +8,13 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Big from 'big.js';
 import SignIn from './components/SignIn';
+import Inputs from './components/Inputs';
+import Convo from './components/Convo';
 import Transactions from './components/Transactions';
 import CreateProposal from './components/CreateProposal'
 import Header from './components/Header';
+import Output from './components/Output';
+import Calculate from './components/Calculate';
 import {
   BrowserRouter as Router,
   Switch,
@@ -47,7 +51,23 @@ function App() {
         </Route>   
         <Route path="/create" >
             <CreateProposal address={address}   />
-        </Route>     
+        </Route>    
+        <Route path="/inputs" >
+            <Inputs address={address}   />
+        </Route>  
+
+         <Route path="/convo" >
+            <Convo address={address}  kit={kit}  />
+        </Route> 
+
+        <Route path="/calculate" >
+            <Calculate address={address}  kit={kit}  />
+        </Route> 
+         <Route path="/output" >
+            <Output address={address}  kit={kit}  />
+        </Route> 
+
+        
     </Switch>
       
 <Route exact path="/">
