@@ -34,9 +34,6 @@ export class output extends React.Component {
     };
     this.handleSubmit = this.handleSubmit.bind(this)
 
-    console.log(`constructor before trigger`);
-
-    console.log(this.contract, this.currentUser, this.nearConfig, this.wallet);
   }
 
 
@@ -46,11 +43,6 @@ export class output extends React.Component {
   };
   handleChange1 = (selectedOption) => {
     this.setState({ selectedOption });
-
-
-
-
-    console.log(`Option selected 1:`, selectedOption);
   };
 
   handleV1Change = async(selectedOptionV1) => {
@@ -177,8 +169,7 @@ export class output extends React.Component {
 
       if(this.state.selectedOptionV1 && this.state.selectedOptionV2 && this.state.selectedOptionOperation ){
 
-          console.log('test logs',this.state.selectedOptionV1,this.state.selectedOptionV2,this.state.selectedOptionOperation);
-
+      
           const impactApiRoot = 'https://impact.projectkelvin.io';
           const scoreCalculate = '/calculations/update-score';
            const impactRequestBody = {
@@ -190,16 +181,11 @@ export class output extends React.Component {
       "collection": "temperature"
     };
 
-    const headers = {
 
-  'Access-Control-Allow-Origin': '*'
-}
-          const impactResponse = await axios.post(`${impactApiRoot}${scoreCalculate}`, impactRequestBody,{
-              headers:headers
-          });
+          const impactResponse = await axios.post(`${impactApiRoot}${scoreCalculate}`, impactRequestBody);
 
           this.state.temeratureResult =impactResponse.data;
-          console.log('impactResponse ',impactResponse);
+         
       }
         
   }
@@ -210,7 +196,7 @@ export class output extends React.Component {
   handleChange(i, e) {
     let calcValues = this.state.calcValues;
 
-    console.log('form values ',calcValues);
+
     calcValues[i][e.target.name] = e.target.value;
     this.setState({ calcValues });
   }
@@ -246,22 +232,12 @@ export class output extends React.Component {
 
 
   async componentDidMount() {
-    console.log("componentDidMount");
-    console.log(this.contract, this.currentUser, this.nearConfig, this.wallet);
+ 
     if (this.wallet && this.contract)
       await this.triggerOAuth();
     // this.forceUpdate()
   }
 
-
-
-  handleClick = async () => {
-
-		  this.wallet.requestSignIn(
-      'gkolluri.testnet',
-      'NEAR Guest Book'
-    );
-  }
 
 
   handleTimeChange(value) {
@@ -311,14 +287,14 @@ export class output extends React.Component {
 ];
 
     for(var i=0;i<variables.length;i++){
-       // console.log('variables ',variables);
+     
         var obj = {};
         obj.value = variables[i].values;
         obj.label = variables[i].name;
         options.push(obj);
     }
 
-    console.log(`render start ${JSON.stringify(this.state.threads)}`);
+ 
     return (
 
 

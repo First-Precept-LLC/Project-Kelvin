@@ -157,24 +157,24 @@ async function DownVote(item,collection) {
                     <div>
                       <h6>{item.votes}</h6>
                       <div>
-                        <a onClick={() => AddVote(item,'temperature')} href="#"><img src="http://saidutt.com/temp/icons/tempUp.svg" class="icon-shadow" alt="" /></a>
-                        <a onClick={() => DownVote(item,'temperature')} href="#"><img src="http://saidutt.com/temp/icons/tempDown.svg" class="icon-shadow" alt="" /></a>
+                        <a onClick={() => AddVote(item,'temperature')} href="#"><img src="https://cdn.kulfyapp.com/celo/tempUp.svg" class="icon-shadow" alt="" /></a>
+                        <a onClick={() => DownVote(item,'temperature')} href="#"><img src="https://cdn.kulfyapp.com/celo/tempDown.svg" class="icon-shadow" alt="" /></a>
                       </div>
                       <span>Temperature</span>
                     </div>
                     <div>
                       <h6>{item.votes}</h6>
                       <div>
-                        <a onClick={() => AddVote(item,'temperature')} href="#"><img src="http://saidutt.com/temp/icons/timeUp.svg" class="icon-shadow" alt="" /></a>
-                        <a onClick={() => DownVote(item,'temperature')} href="#"><img src="http://saidutt.com/temp/icons/timeDown.svg" class="icon-shadow" alt="" /></a>
+                        <a onClick={() => AddVote(item,'temperature')} href="#"><img src="https://cdn.kulfyapp.com/celo/timeUp.svg" class="icon-shadow" alt="" /></a>
+                        <a onClick={() => DownVote(item,'temperature')} href="#"><img src="https://cdn.kulfyapp.com/celo/timeDown.svg" class="icon-shadow" alt="" /></a>
                       </div>
                       <span>Time</span>
                     </div>
                     <div>
                       <h6>{item.votes}</h6>
                       <div>
-                        <a onClick={() => AddVote(item,'temperature')} href="#"><img src="http://saidutt.com/temp/icons/capitalUp.svg" class="icon-shadow" alt="" /></a>
-                        <a onClick={() => DownVote(item,'temperature')} href="#"><img src="http://saidutt.com/temp/icons/capitalDown.svg" class="icon-shadow" alt="" /></a>
+                        <a onClick={() => AddVote(item,'temperature')} href="#"><img src="https://cdn.kulfyapp.com/celo/capitalUp.svg" class="icon-shadow" alt="" /></a>
+                        <a onClick={() => DownVote(item,'temperature')} href="#"><img src="https://cdn.kulfyapp.com/celo/capitalDown.svg" class="icon-shadow" alt="" /></a>
                       </div>
                       <span>Capital</span>
                     </div>
