@@ -52,6 +52,9 @@ const Transactions = () => {
 
     for(var i = 0;i<transaction_votes.length;i++){
         items[i].votes = transaction_votes[i];
+        items[i].tempvotes = Math.floor(Math.random() * 100);
+        items[i].timevotes = Math.floor(Math.random() * 100);
+        items[i].capitalvotes = Math.floor(Math.random() * 100);
     }
 
     console.log('transaction_votes 123',transaction_votes);
@@ -72,7 +75,17 @@ const Transactions = () => {
     console.log('add vote transaction before ',item);
     item.votes = item.votes  + 1;
     console.log('add vote transaction after',item);
-    setTrasactions(item);
+   
+
+
+    if(collection == 'time' ){
+        item.timevotes = item.timevotes  + 1;
+    }else if(collection == 'temperature'){
+        item.tempvotes = item.tempvotes +1
+    }else if(collection == 'capital'){
+        item.capitalvotes = item.capitalvotes+1;
+    }
+     setTrasactions(item);
     const response = await fetch(`https://api.projectkelvin.io/uservotes/updateVoteForProposal?stampType=stamp&proposer=${item.proposer}&proposerName=null&toIdSource=null&toProposal=${item.proposalId}&fromId=${item.proposer}&fromName=null&collection=${collection}&negative=false`);
     //const users = await response.json();
     //setUsers(users);
@@ -81,6 +94,14 @@ const Transactions = () => {
 async function DownVote(item,collection) {
     votes = votes - 1;
     item.votes = item.votes  - 1;
+
+        if(collection == 'time' ){
+        item.timevotes = item.timevotes  - 1;
+    }else if(collection == 'temperature'){
+        item.tempvotes = item.tempvotes -1
+    }else if(collection == 'capital'){
+        item.capitalvotes = item.capitalvotes-1;
+    }
     setTrasactions(item);
     const response = await fetch(`https://api.projectkelvin.io/uservotes/updateVoteForProposal?stampType=stamp&proposer=${item.proposer}&proposerName=null&toIdSource=null&toProposal=${item.proposalId}&fromId=${item.proposer}&fromName=null&collection=${collection}&negative=true`);
     const users = await response.json();
@@ -134,7 +155,7 @@ async function DownVote(item,collection) {
                 <div class="d-flex justify-content-between w-100 my-2 align-items-center">
                     <div>
                     <h6>{item.votes}</h6>
-                    <span class="mylabel">Total Count</span>
+                    <span class="mylabel">Impact Score</span>
                     </div>
                     <div class="d-flex flex-row voting">
                       {/* <div>
@@ -155,7 +176,7 @@ async function DownVote(item,collection) {
 
                     </div> */}
                     <div>
-                      <h6>{item.votes}</h6>
+                      <h6>{item.tempvotes}</h6>
                       <div>
                         <a onClick={() => AddVote(item,'temperature')} href="#"><img src="https://cdn.kulfyapp.com/celo/tempUp.svg" class="icon-shadow" alt="" /></a>
                         <a onClick={() => DownVote(item,'temperature')} href="#"><img src="https://cdn.kulfyapp.com/celo/tempDown.svg" class="icon-shadow" alt="" /></a>
@@ -163,18 +184,18 @@ async function DownVote(item,collection) {
                       <span>Temperature</span>
                     </div>
                     <div>
-                      <h6>{item.votes}</h6>
+                      <h6>{item.timevotes}</h6>
                       <div>
-                        <a onClick={() => AddVote(item,'temperature')} href="#"><img src="https://cdn.kulfyapp.com/celo/timeUp.svg" class="icon-shadow" alt="" /></a>
-                        <a onClick={() => DownVote(item,'temperature')} href="#"><img src="https://cdn.kulfyapp.com/celo/timeDown.svg" class="icon-shadow" alt="" /></a>
+                        <a onClick={() => AddVote(item,'time')} href="#"><img src="https://cdn.kulfyapp.com/celo/timeUp.svg" class="icon-shadow" alt="" /></a>
+                        <a onClick={() => DownVote(item,'time')} href="#"><img src="https://cdn.kulfyapp.com/celo/timeDown.svg" class="icon-shadow" alt="" /></a>
                       </div>
                       <span>Time</span>
                     </div>
                     <div>
-                      <h6>{item.votes}</h6>
+                      <h6>{item.capitalvotes}</h6>
                       <div>
-                        <a onClick={() => AddVote(item,'temperature')} href="#"><img src="https://cdn.kulfyapp.com/celo/capitalUp.svg" class="icon-shadow" alt="" /></a>
-                        <a onClick={() => DownVote(item,'temperature')} href="#"><img src="https://cdn.kulfyapp.com/celo/capitalDown.svg" class="icon-shadow" alt="" /></a>
+                        <a onClick={() => AddVote(item,'capital')} href="#"><img src="https://cdn.kulfyapp.com/celo/capitalUp.svg" class="icon-shadow" alt="" /></a>
+                        <a onClick={() => DownVote(item,'capital')} href="#"><img src="https://cdn.kulfyapp.com/celo/capitalDown.svg" class="icon-shadow" alt="" /></a>
                       </div>
                       <span>Capital</span>
                     </div>
