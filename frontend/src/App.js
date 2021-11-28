@@ -27,6 +27,17 @@ const ContractKit = require('@celo/contractkit')
 const web3 = new Web3('https://alfajores-forno.celo-testnet.org')
 const kit = ContractKit.newKitFromWeb3(web3)
 function App() {
+
+
+  const [title, setTitle] = useState("Project Kelvin : A Currency That Measures Impact");
+
+
+   useEffect(() => {
+    // This will run when the page first loads and whenever the title changes
+    document.title = title;
+  }, [title]);
+
+   
   const { address, connect, kit, getConnectedKit} = useContractKit()
   async function initContract(){
     // Create a new contract instance with the HelloWorld contract info
@@ -96,9 +107,9 @@ function WrappedApp() {
   return (
     <ContractKitProvider
       dapp={{
-          name: "My awesome dApp",
-          description: "My awesome description",
-          url: "https://example.com",
+          name: "Project Kelvin",
+          description: "A Currency That Measures Impact",
+          url: "https://projectkelvin.io/",
         }}
     >
       <App />

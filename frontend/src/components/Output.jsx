@@ -32,9 +32,8 @@ export class output extends React.Component {
     this.connect = props.connect;
 
     this.state = {};
-    this.state.temeratureResult = "Result";
-    this.state.timeResult = "Result";
-    this.state.capitalResult = "Result";
+
+    
 
     this.state = {
       calcValues: [{ name: "", variable1: "", operation: "", variable2: "" }],
@@ -123,6 +122,8 @@ export class output extends React.Component {
       const headers = {
         "Access-Control-Allow-Origin": "*",
       };
+
+      this.setState({"timeResult":'Calculating...'});
       const impactResponse = await axios.post(
         `${impactApiRoot}${scoreCalculate}`,
         impactRequestBody,
@@ -131,8 +132,8 @@ export class output extends React.Component {
         }
       );
 
-      this.state.timeResult = impactResponse.data;
-      console.log("impactResponse ", impactResponse);
+    this.setState({"timeResult":impactResponse.data});
+
     }
   };
 
@@ -156,6 +157,8 @@ export class output extends React.Component {
       const headers = {
         "Access-Control-Allow-Origin": "*",
       };
+
+        this.setState({"capitalResult":'Calculating...'});
       const impactResponse = await axios.post(
         `${impactApiRoot}${scoreCalculate}`,
         impactRequestBody,
@@ -164,8 +167,8 @@ export class output extends React.Component {
         }
       );
 
-      this.state.capitalResult = impactResponse.data;
-      console.log("impactResponse ", impactResponse);
+      this.setState({"capitalResult":impactResponse.data});
+
     }
   };
 
@@ -186,12 +189,15 @@ export class output extends React.Component {
         collection: "temperature",
       };
 
+       this.setState({"temeratureResult":'Calculating...'});
+
       const impactResponse = await axios.post(
         `${impactApiRoot}${scoreCalculate}`,
         impactRequestBody
       );
 
-      this.state.temeratureResult = impactResponse.data;
+ 
+       this.setState({"temeratureResult":impactResponse.data});
     }
   };
 

@@ -43,7 +43,7 @@ export class convoConnector extends React.Component {
     this.setState({thread_id:thread_id})
 
     console.log(this.address,this.contract, this.currentUser, this.nearConfig, this.wallet);
-    await this.triggerOAuth();
+   // await this.triggerOAuth();
     if (this.wallet && this.contract)
       await this.triggerOAuth();
     // this.forceUpdate()
@@ -96,7 +96,7 @@ export class convoConnector extends React.Component {
   triggerOAuth = async () => {
 
     let provider;
-    provider = this.kit.web3.currentProvider;
+    provider = this.kit.web3.getDefaultPro;
 
 
     console.log('kit is ',this.kit.web3);
@@ -134,10 +134,10 @@ let authBody = {
 
 
     // console.log(`send request to convo URL: ${convoApiRoot}${authTokenRequestPath}?apikey=${convoApiToken} with Data: ${JSON.stringify(authTokenRequestBody)}`);
-    const authResponse = await axios.post(`${convoApiRoot}${authTokenRequestPath}?apikey=${convoApiToken}`, authBody);
+    //const authResponse = await axios.post(`${convoApiRoot}${authTokenRequestPath}?apikey=${convoApiToken}`, authBody);
     // console.log(`auth Response from convo: ${JSON.stringify(authResponse)}`);
-    this.authToken = authResponse.data.message;
-    this.setState({token: authResponse.data.message})
+   // this.authToken = authResponse.data.message;
+    //this.setState({token: authResponse.data.message})
 
     // Validate Token
     const validateTokenRequestPath = '/validateAuth';
@@ -205,10 +205,10 @@ let authBody = {
             <Header />
       <ul class="nav nav-pills nav-fill mt-2 mx-2 ">
         <li class="nav-item">
-            <a class="nav-link active color-bg" aria-current="page" href={`/flow?id=${this.state.thread_id}`}>Impact Flow</a>
+            <a class="nav-link  text-white" aria-current="page" href={`/inputs`}>Impact Flow</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-white" href={`/convo?id=${this.state.thread_id}`}>Impact Discussion</a>
+            <a class="nav-link active  color-bg " href={`/convo?id=${this.state.thread_id}`}>Impact Discussion</a>
         </li>
     </ul>
 

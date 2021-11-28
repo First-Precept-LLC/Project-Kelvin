@@ -105,7 +105,7 @@ export class calculate extends React.Component {
 
     localStorage.setItem("impactflow", JSON.stringify(variables));
     //alert(JSON.stringify(this.state.formValues));
-    debugger;
+
     window.location.href = "/output";
   }
 
