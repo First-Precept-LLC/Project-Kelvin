@@ -35,29 +35,59 @@ const Transactions = () => {
     const response = await fetch('https://api.projectkelvin.io/uservotes/getProposalPage?pageNumber=1');
     const users = await response.json();
     items = users.data;
-    console.log('items 123',items);
-    getVotesForTransactions(items);
+
+    getProposalScores(items);
+    getVotesForTransactions(items,'temperature');
+    getVotesForTransactions(items,'time');
+    getVotesForTransactions(items,'capital');
     setTrasactions(users);
   }
 
-  async function getVotesForTransactions(items) {
+  async function getProposalScores(items) {
     let transactions_request = '';
     for(var i = 0;i<items.length;i++){
         transactions_request = transactions_request+'&proposals='+items[i].proposalId;
     }
 
+   
     const response = await fetch('https://api.projectkelvin.io/uservotes/getProposalScore?'+transactions_request);
+    let proposal_score = await response.json();
+    proposal_score = proposal_score.data;
+
+    for(var i = 0;i<proposal_score.length;i++){
+            items[i].votes = proposal_score[i]; 
+    } 
+
+
+    setTrasactions(proposal_score);
+  }
+
+
+  async function getVotesForTransactions(items,collection) {
+    let transactions_request = '';
+    for(var i = 0;i<items.length;i++){
+        transactions_request = transactions_request+'&proposals='+items[i].proposalId;
+    }
+
+    transactions_request = transactions_request+`&collection=`+collection;
+    const response = await fetch('https://api.projectkelvin.io/uservotes/getVotesByProposal?'+transactions_request);
     let transaction_votes = await response.json();
     transaction_votes = transaction_votes.data;
 
-    for(var i = 0;i<transaction_votes.length;i++){
-        items[i].votes = transaction_votes[i];
-        items[i].tempvotes = Math.floor(Math.random() * 100);
-        items[i].timevotes = Math.floor(Math.random() * 100);
-        items[i].capitalvotes = Math.floor(Math.random() * 100);
+    if(collection == 'time'){
+        for(var i = 0;i<transaction_votes.length;i++){
+            items[i].timevotes = transaction_votes[i]; 
+        }    
+    } else if(collection == 'capital'){
+        for(var i = 0;i<transaction_votes.length;i++){
+            items[i].capitalvotes = transaction_votes[i]; 
+        }        
+    } else if(collection == 'temperature'){
+        for(var i = 0;i<transaction_votes.length;i++){
+            items[i].tempvotes = transaction_votes[i]; 
+        } 
     }
 
-    console.log('transaction_votes 123',transaction_votes);
     setTrasactions(transaction_votes);
   }
 
