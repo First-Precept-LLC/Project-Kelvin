@@ -1,5 +1,6 @@
 # Project-Kelvin
-A financial system in alignment with the first precept of Buddhism.
+Project Kelvin is a DAO framework for Impact-Driven DAOs.
 
-frontend folder contains React bases UI project for the demo web application.
-near-wallet-api-server folder contains Node based API project.
+We combine a sybil-resistant "subjective metric" that can measure values like integrity or playfulness, with a sybil-resistant objective metric that can measure goals like "Lives Saved" or "Customers Served", into a single "Impact Score". 
+
+We then allow DAOs to work together using a "recursive bonding curve" model that allows tokens to flow to the people and projects who have the most positive impact.
