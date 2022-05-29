@@ -15,6 +15,7 @@
         href="https://fonts.googleapis.com/css?family=Poppins:100,100italic,200,200italic,300,300italic,regular,italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic"
         rel="stylesheet" />
     <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/flowbite@1.4.7/dist/flowbite.min.css" />
     <script>
         tailwind.config = {
             theme: {
@@ -140,74 +141,90 @@
                 </p>
             </div>
         </div>
+
         <!-- right main section -->
         <div class="flex w-full p-8 flex-col">
             <div class="flex justify-between">
-                <h1 class="text-3xl mb-8">Users</h1>
-                <button type="button"
-                    class="text-white  bg-kelvinMedium hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-md text-sm px-5 py- h-8 text-left mb-2 hover:bg-kelvinBold"
-                    data-modal-toggle="large-modal">
-                    <i class="fa-solid fa-sort"></i>
-                    Filters</button>
+                <h1 class="text-3xl mb-8">Model V1</h1>
             </div>
-            <!-- Goals section -->
-            <div class="flex flex-col mb-8">
-                <div class="flex bg-kelvinLight p-4 rounded-md w-full flex-wrap">
-                    <div
-                        class="flex items-center w-full  justify-between p-4 bg-white shadow shadow-md rounded-md mb-2">
-                        <div class="flex flex-col">
-                            <h6 class="">Saidutt Chakka</h6>
-                            <p class="text-xs text-kelvinBlack opacity-50">@saidutt</p>
+
+
+            <div class="flex flex-col">
+
+                <div class="flex flex-col mb-4">
+                    <div class="flex mb-4">
+                        <p class="text-kelvinDark p-2 px-4 border-2 mr-4 text-sm border-gray-300 rounded">Due by Aug 24,
+                            2022
+                        </p>
+                        <div class="text-kelvinDark p-2 px-4 border-2 text-sm border-gray-300 rounded">Assignee <span
+                                class="text-white bg-kelvinMedium p-1 px-2 ml-2 rounded text-sm">saidutt</span>
                         </div>
-                        <div class="flex">
-                            <h6 class="">@john</h6>
-                        </div>
-                        <a href="#" class="text-kelvinDark text-sm hover:underline">
-                            3 Departments
-                        </a>
-                        <a href="#" class="text-kelvinDark text-sm hover:underline">
-                            on 4 Processes </a>
-                        <button type="button"
-                            class="text-white  bg-kelvinMedium hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-md text-sm px-5 py- h-8 text-left mb-2 hover:bg-kelvinBold"
-                            data-modal-toggle="large-modal">
-                            <i class="fa-solid fa-pencil"></i>
-                            Edit</button>
                     </div>
-                    <div
-                        class="flex items-center w-full  justify-between p-4 bg-white shadow shadow-md rounded-md mb-2">
-                        <div class="flex flex-col">
-                            <h6 class="">Saidutt Chakka</h6>
-                            <p class="text-xs text-kelvinBlack opacity-50">@saidutt</p>
-                        </div>
-                        <div class="flex">
-                            <h6 class="">@matt</h6>
-                        </div>
-                        <a href="#" class="text-kelvinDark text-sm hover:underline">
-                            3 Departments
-                        </a>
-                        <a href="#" class="text-kelvinDark text-sm hover:underline">
-                            on 4 Processes </a>
-                        <button type="button"
-                            class="text-white  bg-kelvinMedium hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-md text-sm px-5 py- h-8 text-left mb-2 hover:bg-kelvinBold"
-                            data-modal-toggle="large-modal">
-                            <i class="fa-solid fa-pencil"></i>
-                            Edit</button>
-                    </div>
-                    <button type="button"
-                        class="text-white bg-kelvinMedium hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-md text-sm px-5 py- h-8 text-left w-full mb-2 hover:bg-kelvinBold"
-                        data-modal-toggle="large-modal">
-                        <i class="fa-solid fa-plus"></i>
-                        Add User</button>
+                    <p class="text-kelvinBlack text-sm">Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime
+                        accusantium veritatis libero
+                        doloremque. Possimus ut laboriosam, odit consequuntur, animi laborum minus nulla maiores culpa
+                        totam quae, impedit quas enim reiciendis.</p>
                 </div>
             </div>
-            <div class="flex">
+            <div class="flex flex-col">
+                <h6 class="text-kelvinDark">Steps</h6>
+                <div class="flex grid grid-cols-2 gap-4">
+                    <div class="flex  bg-kelvinLight p-4">
+                        <div class="flex flex-col w-full">
+                            <div
+                                class="flex items-center w-full min-h-8 justify-start pl-4 py-1 bg-white shadow shadow-md rounded-md mb-2 flex-wrap border-2 border-gray-300">
+                                <input id="link-checkbox" type="checkbox" value=""
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 mr-2">
 
+                                <h6 class="">Reach $1Trillion revenue mark</h6>
+                            </div>
+                            <div
+                                class="flex items-center w-full min-h-8 justify-start pl-4 py-1 bg-white shadow shadow-md rounded-md mb-2 flex-wrap">
+                                <input id="link-checkbox" type="checkbox" value=""
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 mr-2">
+
+                                <h6 class="">Reach $2Trillion revenue mark</h6>
+                            </div>
+                            <div
+                                class="flex items-center w-full min-h-8 justify-start pl-4 py-1 bg-white shadow shadow-md rounded-md mb-2 flex-wrap">
+                                <input id="link-checkbox" type="checkbox" value=""
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 mr-2">
+
+                                <h6 class="">Reach $3Trillion revenue mark</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col bg-kelvinLight p-8">
+                        <h5 class="text-lg mb-4">Reach $1Trillion revenue mark</h5>
+                        <div class="flex mb-4 flex-wrap">
+                            <p class="text-kelvinDark p-2 px-4 border-2 mr-4 text-sm border-gray-200 rounded">Due by Aug
+                                24,
+                                2022
+                            </p>
+                            <div class="text-kelvinDark p-2 px-4 border-2 text-sm border-gray-200 rounded mr-2">Assignee
+                                <span class="text-white bg-kelvinMedium p-1 px-2 ml-2 rounded text-sm">saidutt</span>
+                            </div>
+                            <button class="flex text-white bg-kelvinMedium p-2 items-center px-4 my-2 rounded text-sm">
+                                <!-- navigate to voting widget -->
+                                <i class="fa-solid fa-check-to-slot mr-1 "></i>Votes (23)
+                            </button>
+                        </div>
+                        <p class="text-black/75 text-sm">Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                            Maxime
+                            accusantium veritatis libero
+                            doloremque. Possimus ut laboriosam, odit consequuntur, animi laborum minus nulla maiores
+                            culpa
+                            totam quae, impedit quas enim reiciendis.</p>
+
+                    </div>
+                </div>
             </div>
-
-
         </div>
-    </div>
 
+
+
+    </div>
+    <script src="https://unpkg.com/flowbite@1.4.7/dist/flowbite.js"></script>
 </body>
 
 </html>
