@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@vulcanjs/graphql": "^0.6.9-alpha.0",
+    "@vulcanjs/mongo": "^0.6.7",
+    "@vulcanjs/schema": "^0.6.7"
+  }
+}
