@@ -130,7 +130,7 @@
                     <a href="#" class="text-kelvinDark mb-3"><i class="fa-solid  fa-chart-simple mr-1"></i>
                         Organizations</a>
                     <a href="#" class="text-kelvinDark mb-3"><i class="fa-solid  fa-chart-simple mr-1"></i>
-                        Departments</a>
+                        Projects</a>
                     <a href="#" class="text-kelvinDark mb-3"><i class="fa-solid  fa-chart-simple mr-1"></i> Roles</a>
                     <a href="#" class="text-kelvinDark mb-3"><i class="fa-solid  fa-chart-simple mr-1"></i> Users</a>
                 </div>
@@ -157,7 +157,7 @@
                             2022
                         </p>
                         <div class="text-kelvinDark p-2 px-4 border-2 text-sm border-gray-300 rounded">Assignee <span
-                                class="text-white bg-kelvinMedium p-1 px-2 ml-2 rounded text-sm">saidutt</span>
+                                class="text-white bg-kelvinBold p-1 px-2 ml-2 rounded text-sm">saidutt</span>
                         </div>
                     </div>
                     <p class="text-kelvinBlack text-sm">Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime
@@ -196,15 +196,17 @@
                     </div>
                     <div class="flex flex-col bg-kelvinLight p-8">
                         <h5 class="text-lg mb-4">Reach $1Trillion revenue mark</h5>
-                        <div class="flex mb-4 flex-wrap">
+                        <div class="flex mb-4 flex-wrap items-center">
                             <p class="text-kelvinDark p-2 px-4 border-2 mr-4 text-sm border-gray-200 rounded">Due by Aug
                                 24,
                                 2022
                             </p>
                             <div class="text-kelvinDark p-2 px-4 border-2 text-sm border-gray-200 rounded mr-2">Assignee
-                                <span class="text-white bg-kelvinMedium p-1 px-2 ml-2 rounded text-sm">saidutt</span>
+                                <span class="text-white bg-kelvinBold p-1 px-2 ml-2 rounded text-sm">saidutt</span>
                             </div>
-                            <button class="flex text-white bg-kelvinMedium p-2 items-center px-4 my-2 rounded text-sm">
+                            <button
+                                class="flex text-white bg-gradient-to-r from-kelvinDark  to-kelvinBold hover:bg-gradient-to-br p-2 items-center px-4 my-2 rounded text-sm"
+                                data-modal-toggle="defaultModal">
                                 <!-- navigate to voting widget -->
                                 <i class="fa-solid fa-check-to-slot mr-1 "></i>Votes (23)
                             </button>
@@ -224,6 +226,147 @@
 
 
     </div>
+
+
+
+
+
+    <div id="defaultModal" tabindex="-1" aria-hidden="true"
+        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full justify-center items-center">
+        <div class="relative p-4 w-full max-w-2xl h-full md:h-auto">
+
+            <div class="relative bg-white rounded-lg shadow ">
+
+                <div class="flex justify-between items-start p-4 rounded-t ">
+
+                    <button type="button"
+                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                        data-modal-toggle="defaultModal">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="flex flex-col ">
+                    <div class="flex px-10 mt-10 mb-4 items-center">
+                        <h1 class="text-3xl font-medium">Voting for Step - <span class="text-kelvinDark">Start
+                                Research</span></h1>
+                    </div>
+                    <div class="px-10 my-4">
+
+                        <form>
+                            <label for="default-search"
+                                class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-gray-300">Search</label>
+                            <div class="relative">
+                                <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                                    <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                    </svg>
+                                </div>
+                                <input type="search" id="default-search"
+                                    class="block p-4 pl-10 w-full text-sm text-gray-900 bg-kelvinLight rounded-lg border-2 border-gray-300 focus:ring-kelvinMedium focus:border-kelvinMedium dark:bg-kelvinLight dark:border-gray-300 dark:placeholder-gray-400 dark:text-white dark:focus:ring-kelvinMedium dark:focus:border-kelvinMedium"
+                                    placeholder="Search Mockups, Logos..." required="">
+                                <button type="submit"
+                                    class="text-white absolute right-2.5 bottom-2.5 bg-kelvinMedium hover:bg-kelvinDark focus:ring-4 focus:outline-none focus:ring-kelvinMedium font-medium rounded-lg text-sm px-4 py-2 dark:bg-kelvinMedium dark:hover:bg-kelvinDark dark:focus:ring-blue-800">Search</button>
+                            </div>
+                        </form>
+
+                    </div>
+                    <!-- cards -->
+                    <div class="flex flex-col px-10">
+                        <!-- card -->
+                        <div class="flex shadow shadow-md rounded-md py-4 px-6 my-2 items-center justify-between">
+                            <div class="flex">
+                                <div class="flex flex-col justify-start items-start mr-2">
+                                    <i class="fa-solid text-kelvinDark mr-2 fa-rocket text-xl"></i>
+                                </div>
+                                <div class="mr-8">
+                                    <h6 class="leading-none mb-2 ">Modern</h6>
+                                    <p class="text-gray-400">Short description of value here accommodates two lines</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <div class="flex">
+                                    <p class="text-kelvinDark bg-kelvinLight px-3 py-2  font-bold rounded">32</p>
+                                </div>
+                                <div class="flex my-4">
+                                    <button type="button"
+                                        class="focus:outline-none text-white bg-kelvinDark hover:bg-kelvinBold focus:ring-4 focus:ring-kelvinDark font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-kelvinDark dark:hover:bg-kelvinBold dark:focus:ring-kelvinDark"><i
+                                            class="fa-solid text-white fa-thumbs-up"></i></button>
+                                    <label for="" class="p-2 mx-2 font-medium text-lg">5</label>
+                                    <button type="button"
+                                        class="focus:outline-none text-white bg-kelvinDark hover:bg-kelvinBold focus:ring-4 focus:ring-kelvinDark font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-kelvinDark dark:hover:bg-kelvinBold dark:focus:ring-kelvinDark"><i
+                                            class="fa-solid text-white fa-thumbs-down"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- card -->
+                        <div class="flex shadow shadow-md rounded-md py-4 px-6 my-2 items-center justify-between">
+                            <div class="flex">
+                                <div class="flex flex-col justify-start items-start mr-2">
+                                    <i class="fa-solid text-kelvinDark mr-2 fa-rocket text-xl"></i>
+                                </div>
+                                <div class="mr-8">
+                                    <h6 class="leading-none mb-2 ">Modern</h6>
+                                    <p class="text-gray-400">Short description of value here accommodates two lines</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <div class="flex">
+                                    <p class="text-kelvinDark bg-kelvinLight px-3 py-2  font-bold rounded">32</p>
+                                </div>
+                                <div class="flex my-4">
+                                    <button type="button"
+                                        class="focus:outline-none text-white bg-kelvinDark hover:bg-kelvinBold focus:ring-4 focus:ring-kelvinDark font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-kelvinDark dark:hover:bg-kelvinBold dark:focus:ring-kelvinDark"><i
+                                            class="fa-solid text-white fa-thumbs-up"></i></button>
+                                    <label for="" class="p-2 mx-2 font-medium text-lg">5</label>
+                                    <button type="button"
+                                        class="focus:outline-none text-white bg-kelvinDark hover:bg-kelvinBold focus:ring-4 focus:ring-kelvinDark font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-kelvinDark dark:hover:bg-kelvinBold dark:focus:ring-kelvinDark"><i
+                                            class="fa-solid text-white fa-thumbs-down"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- card -->
+                        <div class="flex shadow shadow-md rounded-md py-4 px-6 my-2 items-center justify-between">
+                            <div class="flex">
+                                <div class="flex flex-col justify-start items-start mr-2">
+                                    <i class="fa-solid text-kelvinDark mr-2 fa-rocket text-xl"></i>
+                                </div>
+                                <div class="mr-8">
+                                    <h6 class="leading-none mb-2 ">Modern</h6>
+                                    <p class="text-gray-400">Short description of value here accommodates two lines</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <div class="flex">
+                                    <p class="text-kelvinDark bg-kelvinLight px-3 py-2  font-bold rounded">32</p>
+                                </div>
+                                <div class="flex my-4">
+                                    <button type="button"
+                                        class="focus:outline-none text-white bg-kelvinDark hover:bg-kelvinBold focus:ring-4 focus:ring-kelvinDark font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-kelvinDark dark:hover:bg-kelvinBold dark:focus:ring-kelvinDark"><i
+                                            class="fa-solid text-white fa-thumbs-up"></i></button>
+                                    <label for="" class="p-2 mx-2 font-medium text-lg">5</label>
+                                    <button type="button"
+                                        class="focus:outline-none text-white bg-kelvinDark hover:bg-kelvinBold focus:ring-4 focus:ring-kelvinDark font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-kelvinDark dark:hover:bg-kelvinBold dark:focus:ring-kelvinDark"><i
+                                            class="fa-solid text-white fa-thumbs-down"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex px-10 my-4">
+                        <button type="button"
+                            class="text-white bg-gradient-to-r from-kelvinDark  to-kelvinBold hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 w-36">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://unpkg.com/flowbite@1.4.7/dist/flowbite.js"></script>
 </body>
 

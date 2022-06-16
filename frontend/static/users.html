@@ -129,7 +129,7 @@
                     <a href="#" class="text-kelvinDark mb-3"><i class="fa-solid  fa-chart-simple mr-1"></i>
                         Organizations</a>
                     <a href="#" class="text-kelvinDark mb-3"><i class="fa-solid  fa-chart-simple mr-1"></i>
-                        Departments</a>
+                        Projects</a>
                     <a href="#" class="text-kelvinDark mb-3"><i class="fa-solid  fa-chart-simple mr-1"></i> Roles</a>
                     <a href="#" class="text-kelvinDark mb-3"><i class="fa-solid  fa-chart-simple mr-1"></i> Users</a>
                 </div>
@@ -150,7 +150,6 @@
                     <i class="fa-solid fa-sort"></i>
                     Filters</button>
             </div>
-            <!-- Goals section -->
             <div class="flex flex-col mb-8">
                 <div class="flex bg-kelvinLight p-4 rounded-md w-full flex-wrap">
                     <div
@@ -163,7 +162,7 @@
                             <h6 class="">@john</h6>
                         </div>
                         <a href="#" class="text-kelvinDark text-sm hover:underline">
-                            3 Departments
+                            3 Projects
                         </a>
                         <a href="#" class="text-kelvinDark text-sm hover:underline">
                             on 4 Processes </a>
@@ -183,7 +182,7 @@
                             <h6 class="">@matt</h6>
                         </div>
                         <a href="#" class="text-kelvinDark text-sm hover:underline">
-                            3 Departments
+                            3 Projects
                         </a>
                         <a href="#" class="text-kelvinDark text-sm hover:underline">
                             on 4 Processes </a>
@@ -195,7 +194,7 @@
                     </div>
                     <button type="button"
                         class="text-white bg-kelvinMedium hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-md text-sm px-5 py- h-8 text-left w-full mb-2 hover:bg-kelvinBold"
-                        data-modal-toggle="large-modal">
+                        data-modal-toggle="usermodal">
                         <i class="fa-solid fa-plus"></i>
                         Add User</button>
                 </div>
@@ -208,6 +207,88 @@
         </div>
     </div>
 
+    <!-- Add User Modal -->
+    <div id="usermodal" tabindex="-1"
+        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full">
+        <div class="relative p-4 w-full max-w-md h-full md:h-auto">
+            <div class="relative p-4 w-full max-w-4xl h-full md:h-auto">
+                <!-- Modal content -->
+                <div class="relative bg-white rounded-lg shadow ">
+                    <!-- Modal header -->
+                    <div class="flex justify-between items-center p-5 rounded-t">
+                        <h3 class="text-xl font-medium text-gray-900 ">
+                            <!-- Let's build an Organization -->
+                        </h3>
+                        <button type="button"
+                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                            data-modal-toggle="user-modal">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <form action="">
+                        <!-- Modal body -->
+                        <div class="px-6 space-y-6 flex">
+                            <div class="flex flex-col mx-8">
+
+                                <div class="flex flex-col mb-8">
+                                    <h2 class="text-3xl mb-2">Add User</h2>
+                                </div>
+                                <div class="flex flex-col mb-8">
+                                    <h4 class="text-xs font-bold mb-2">Name</h4>
+                                    <input type="text" id="fullname"
+                                        class="bg-gray-50 border-2 border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                        placeholder="Enter full name" required>
+                                </div>
+                                <div class="flex flex-col mb-8">
+                                    <label for="countries" class="text-xs font-bold mb-2">1 Level Up</label>
+                                    <select id="countries"
+                                        class="bg-gray-50 border-2 border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                        <option selected="">Choose manager</option>
+                                        <option value="US">HR</option>
+                                        <option value="CA">HR</option>
+                                        <option value="FR">HR</option>
+                                        <option value="DE">HR</option>
+                                    </select>
+                                    <p class="text-xs opacity-50 mt-2">Select the user 1 Level above this user
+                                    </p>
+                                </div>
+                                <div class="flex flex-col mb-8">
+                                    <label for="countries_multiple" class="text-xs font-bold mb-2">
+                                        Project</label>
+                                    <select multiple="" id="countries_multiple"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+
+                                        <option selected>Choose a Project</option>
+                                        <option value="US">Manager 1</option>
+                                        <option value="CA">Manager 2</option>
+                                        <option value="FR">Manager 3</option>
+                                        <option value="DE">Manager 4</option>
+                                    </select>
+                                    <p class="text-xs opacity-50 mt-2">You can select multiple Projects
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Modal footer -->
+                        <div class="flex items-center p-6 space-x-2 rounded-b justify-end  dark:border-gray-600">
+                            <button type="submit"
+                                class="text-kelvinBlack  hover:bg-kelvinLight focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-6"
+                                data-modal-toggle="success-modal">Cancel</button>
+                            <button type="submit"
+                                class="text-white bg-kelvinBold hover:bg-kelvinDark focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-6"
+                                data-modal-toggle="success-modal">Add User</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://unpkg.com/flowbite@1.4.5/dist/flowbite.js"></script>
 </body>
 
 </html>
